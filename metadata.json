@@ -1,0 +1,6 @@
+{
+  "name": "OKX Landing Page",
+  "description": "An authentic, high-fidelity landing page clone of OKX.com featuring interactive charts, price ticker, secure swap platform, Web3 details, and responsive design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
