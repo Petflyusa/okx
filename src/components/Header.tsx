@@ -87,15 +87,37 @@ export default function Header({ activeTab, setActiveTab, onSignUpClick, onLogin
       <div className="max-w-7xl mx-auto px-4 lg:px-6 h-14 flex items-center justify-between">
         {/* Left Side: Logo & Exchange/Wallet Switcher */}
         <div className="flex items-center space-x-6">
-          {/* Authentic OKX Logo Grid Icon + Lettering */}
-          <a href="#" className="flex items-center space-x-2 mr-2">
-            <div className="grid grid-cols-2 gap-0.5 w-6 h-6">
-              <div className="bg-white rounded-[1px] w-2.5 h-2.5"></div>
-              <div className="bg-brand rounded-[1px] w-2.5 h-2.5"></div>
-              <div className="bg-white rounded-[1px] w-2.5 h-2.5"></div>
-              <div className="bg-white rounded-[1px] w-2.5 h-2.5"></div>
-            </div>
-            <span className="font-display font-bold text-xl tracking-tight text-white">OKX</span>
+          {/* Authentic OKX Wallet Logo */}
+          <a href="#" className="flex items-center space-x-1.5 mr-2">
+            <svg id="okx-wallet-logo" width="104" height="32" viewBox="0 0 104 32" fill="currentColor" className="h-5.5 w-[76px] tracking-normal shrink-0 text-white">
+              {/* Block 1: O */}
+              <rect x="0" y="0" width="10" height="10" rx="1.2" />
+              <rect x="11" y="0" width="10" height="10" rx="1.2" />
+              <rect x="22" y="0" width="10" height="10" rx="1.2" />
+              <rect x="0" y="11" width="10" height="10" rx="1.2" />
+              <rect x="22" y="11" width="10" height="10" rx="1.2" />
+              <rect x="0" y="22" width="10" height="10" rx="1.2" />
+              <rect x="11" y="22" width="10" height="10" rx="1.2" />
+              <rect x="22" y="22" width="10" height="10" rx="1.2" />
+
+              {/* Block 2: K */}
+              <rect x="36" y="0" width="10" height="10" rx="1.2" />
+              <rect x="58" y="0" width="10" height="10" rx="1.2" />
+              <rect x="36" y="11" width="10" height="10" rx="1.2" />
+              <rect x="47" y="11" width="10" height="10" rx="1.2" />
+              <rect x="36" y="22" width="10" height="10" rx="1.2" />
+              <rect x="58" y="22" width="10" height="10" rx="1.2" />
+
+              {/* Block 3: X */}
+              <rect x="72" y="0" width="10" height="10" rx="1.2" />
+              <rect x="94" y="0" width="10" height="10" rx="1.2" />
+              <rect x="83" y="11" width="10" height="10" rx="1.2" />
+              <rect x="72" y="22" width="10" height="10" rx="1.2" />
+              <rect x="94" y="22" width="10" height="10" rx="1.2" />
+            </svg>
+            <span className="font-sans text-lg md:text-xl font-bold tracking-tight text-white select-none">
+              Wallet
+            </span>
           </a>
 
           {/* Switcher Tabs - Dynamic and Sleek */}

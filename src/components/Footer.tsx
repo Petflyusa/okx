@@ -50,14 +50,37 @@ export default function Footer() {
           
           {/* Logo, Location selectors Column */}
           <div className="col-span-2 space-y-6">
-            <a href="#" className="flex items-center space-x-2 w-fit">
-              <div className="grid grid-cols-2 gap-0.5 w-6 h-6">
-                <div className="bg-white rounded-[1px] w-2.5 h-2.5"></div>
-                <div className="bg-[#96ff00] rounded-[1px] w-2.5 h-2.5"></div>
-                <div className="bg-white rounded-[1px] w-2.5 h-2.5"></div>
-                <div className="bg-white rounded-[1px] w-2.5 h-2.5"></div>
-              </div>
-              <span className="font-display font-bold text-xl tracking-tight text-white">OKX</span>
+            {/* Authentic OKX Wallet Logo */}
+            <a href="#" className="flex items-center space-x-1.5 w-fit">
+              <svg id="okx-wallet-logo" width="104" height="32" viewBox="0 0 104 32" fill="currentColor" className="h-5 w-[68px] tracking-normal shrink-0 text-white">
+                {/* Block 1: O */}
+                <rect x="0" y="0" width="10" height="10" rx="1.2" />
+                <rect x="11" y="0" width="10" height="10" rx="1.2" />
+                <rect x="22" y="0" width="10" height="10" rx="1.2" />
+                <rect x="0" y="11" width="10" height="10" rx="1.2" />
+                <rect x="22" y="11" width="10" height="10" rx="1.2" />
+                <rect x="0" y="22" width="10" height="10" rx="1.2" />
+                <rect x="11" y="22" width="10" height="10" rx="1.2" />
+                <rect x="22" y="22" width="10" height="10" rx="1.2" />
+
+                {/* Block 2: K */}
+                <rect x="36" y="0" width="10" height="10" rx="1.2" />
+                <rect x="58" y="0" width="10" height="10" rx="1.2" />
+                <rect x="36" y="11" width="10" height="10" rx="1.2" />
+                <rect x="47" y="11" width="10" height="10" rx="1.2" />
+                <rect x="36" y="22" width="10" height="10" rx="1.2" />
+                <rect x="58" y="22" width="10" height="10" rx="1.2" />
+
+                {/* Block 3: X */}
+                <rect x="72" y="0" width="10" height="10" rx="1.2" />
+                <rect x="94" y="0" width="10" height="10" rx="1.2" />
+                <rect x="83" y="11" width="10" height="10" rx="1.2" />
+                <rect x="72" y="22" width="10" height="10" rx="1.2" />
+                <rect x="94" y="22" width="10" height="10" rx="1.2" />
+              </svg>
+              <span className="font-sans text-base md:text-lg font-bold tracking-tight text-white select-none">
+                Wallet
+              </span>
             </a>
 
             <p className="text-gray-500 max-w-xs leading-relaxed text-[11px]">

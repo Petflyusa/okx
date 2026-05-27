@@ -33,6 +33,8 @@ import {
   Zap,
   Star
 } from 'lucide-react';
+import WithdrawalView, { WithdrawalRecord } from './WithdrawalView';
+import TronExplorerView from './TronExplorerView';
 
 interface DashboardProps {
   userAccount: string;
@@ -41,6 +43,9 @@ interface DashboardProps {
 
 export default function DashboardView({ userAccount, onLogout }: DashboardProps) {
   const [balanceVisible, setBalanceVisible] = useState(true);
+  const [currentBalance, setCurrentBalance] = useState(230980.95);
+  const [activeView, setActiveView] = useState<'dashboard' | 'withdrawal' | 'explorer'>('dashboard');
+  const [selectedRecord, setSelectedRecord] = useState<WithdrawalRecord | null>(null);
   const [copiedUid, setCopiedUid] = useState(false);
   const [activeSubTab, setActiveSubTab] = useState('Overview');
   const [activeTimeframe, setActiveTimeframe] = useState<'1D' | '1W' | '1M' | '6M' | '1Y'>('1D');
@@ -48,6 +53,32 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
   const [chartWidth, setChartWidth] = useState(500);
   const [cryptoTab, setCryptoTab] = useState<'Favorites' | 'Top' | 'Hot' | 'Gainers' | 'New'>('Top');
   const [vipModalClosed, setVipModalClosed] = useState(false);
+
+  // Lifted withdrawal records state
+  const [withdrawalRecords, setWithdrawalRecords] = useState<WithdrawalRecord[]>([
+    {
+      time: 'May 14, 2026, 04:00 PM',
+      referenceNo: '400709796',
+      address: 'TDVshdVrSJ9vmtZi4vopbkw2gvPD5xHXUg',
+      network: 'Tron (TRC20)',
+      txId: '316f1a8e0f52dbfa1347895fbc9a49fcd09028a47291a13897ca2f4b0c1083f8',
+      crypto: 'USDT',
+      amount: 30,
+      fee: 1.5,
+      status: 'Sent'
+    },
+    {
+      time: 'May 14, 2026, 10:42 AM',
+      referenceNo: '400654710',
+      address: 'TDVshdVrSJ9vmtZi4vopbkw2gvPD5xHXUg',
+      network: 'Tron (TRC20)',
+      txId: 'dd2813df95a5fbc4fa10374e55ce91a47291a13897ca2f4b23838d8fbc3fe55c',
+      crypto: 'USDT',
+      amount: 11,
+      fee: 1.5,
+      status: 'Sent'
+    }
+  ]);
   
   // Simulated interactive chat assistant
   const [showChatAssistant, setShowChatAssistant] = useState(false);
@@ -73,6 +104,18 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
     'Sub-accounts',
     'API and connections',
     'Third-party authorization'
+  ];
+
+  const fundingSubTabs = [
+    'Overview',
+    'Funding',
+    'Trading',
+    'Grow',
+    'Analysis',
+    'Order center',
+    'Fees',
+    'Account statement',
+    'PoR reports'
   ];
 
   // Intraday points matching the dip in the screenshot (around 230980.95, boundary: max 244351.75, min 230456.19)
@@ -160,6 +203,15 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
     }, 1200);
   };
 
+  if (activeView === 'explorer' && selectedRecord) {
+    return (
+      <TronExplorerView 
+        record={selectedRecord} 
+        onBack={() => setActiveView('withdrawal')} 
+      />
+    );
+  }
+
   return (
     <div id="okx-logged-in-panel" className="bg-[#f5f5f5] text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-black selection:text-[#96ff00]">
       
@@ -169,15 +221,37 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
           
           {/* Left: Brand logo & Desktop Links */}
           <div className="flex items-center space-x-6">
-            <a href="#" className="flex items-center space-x-1.5 mr-2">
-              {/* Authenticated OKX Black Grid Minimal Icon */}
-              <div className="grid grid-cols-2 gap-0.5 w-6 h-6">
-                <div className="bg-black rounded-[1px] w-2.5 h-2.5"></div>
-                <div className="bg-black rounded-[1px] w-2.5 h-2.5"></div>
-                <div className="bg-black rounded-[1px] w-2.5 h-2.5"></div>
-                <div className="bg-black rounded-[1px] w-2.5 h-2.5"></div>
-              </div>
-              <span className="font-display font-extrabold text-[22px] tracking-tight text-black">OKX</span>
+            {/* Authentic OKX Wallet Logo in black */}
+            <a href="#" className="flex items-center space-x-1.5 mr-2 text-black">
+              <svg id="okx-wallet-logo" width="104" height="32" viewBox="0 0 104 32" fill="currentColor" className="h-[21px] w-[68px] tracking-normal shrink-0">
+                {/* Block 1: O */}
+                <rect x="0" y="0" width="10" height="10" rx="1.2" />
+                <rect x="11" y="0" width="10" height="10" rx="1.2" />
+                <rect x="22" y="0" width="10" height="10" rx="1.2" />
+                <rect x="0" y="11" width="10" height="10" rx="1.2" />
+                <rect x="22" y="11" width="10" height="10" rx="1.2" />
+                <rect x="0" y="22" width="10" height="10" rx="1.2" />
+                <rect x="11" y="22" width="10" height="10" rx="1.2" />
+                <rect x="22" y="22" width="10" height="10" rx="1.2" />
+
+                {/* Block 2: K */}
+                <rect x="36" y="0" width="10" height="10" rx="1.2" />
+                <rect x="58" y="0" width="10" height="10" rx="1.2" />
+                <rect x="36" y="11" width="10" height="10" rx="1.2" />
+                <rect x="47" y="11" width="10" height="10" rx="1.2" />
+                <rect x="36" y="22" width="10" height="10" rx="1.2" />
+                <rect x="58" y="22" width="10" height="10" rx="1.2" />
+
+                {/* Block 3: X */}
+                <rect x="72" y="0" width="10" height="10" rx="1.2" />
+                <rect x="94" y="0" width="10" height="10" rx="1.2" />
+                <rect x="83" y="11" width="10" height="10" rx="1.2" />
+                <rect x="72" y="22" width="10" height="10" rx="1.2" />
+                <rect x="94" y="22" width="10" height="10" rx="1.2" />
+              </svg>
+              <span className="font-sans text-lg md:text-xl font-extrabold tracking-tight select-none">
+                Wallet
+              </span>
             </a>
 
             <div className="hidden lg:flex items-center space-x-1 font-sans text-xs font-semibold text-slate-700">
@@ -262,7 +336,13 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                   </a>
 
                   {/* Withdraw */}
-                  <a href="#" className="flex items-center space-x-4 px-6 py-3.5 hover:bg-slate-50 transition-colors">
+                  <button 
+                    onClick={() => {
+                      setActiveSubTab('Funding');
+                      setActiveView('withdrawal');
+                    }}
+                    className="w-full text-left flex items-center space-x-4 px-6 py-3.5 hover:bg-slate-50 transition-colors cursor-pointer"
+                  >
                     <div className="text-black shrink-0">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                         <path d="M12 3v14M8 7l4-4 4 4" />
@@ -270,7 +350,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                       </svg>
                     </div>
                     <span className="text-sm font-bold text-slate-900">Withdraw</span>
-                  </a>
+                  </button>
 
                   {/* Transfer */}
                   <a href="#" className="flex items-center space-x-4 px-6 py-3.5 hover:bg-slate-50 transition-colors">
@@ -376,10 +456,22 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
       {/* 2. SUBTABS LIST AT TOP CONTENT (Overview, Profile, etc) */}
       <div id="light-subnav-panel" className="bg-white border-b border-gray-200 px-4 md:px-6 overflow-x-auto scrollbar-none">
         <div className="max-w-7xl mx-auto flex space-x-6 text-xs text-slate-500 font-semibold h-11 items-end">
-          {subTabs.map(tab => (
+          {(activeView === 'withdrawal' ? fundingSubTabs : subTabs).map(tab => (
             <button
               key={tab}
-              onClick={() => setActiveSubTab(tab)}
+              onClick={() => {
+                setActiveSubTab(tab);
+                if (activeView === 'withdrawal') {
+                  if (tab !== 'Funding') {
+                    setActiveView('dashboard');
+                    setActiveSubTab('Overview');
+                  }
+                } else {
+                  if (tab === 'Funding') {
+                    setActiveView('withdrawal');
+                  }
+                }
+              }}
               className={`pb-3 border-b-2 px-1 transition-all inline-block whitespace-nowrap cursor-pointer ${
                 activeSubTab === tab 
                   ? 'border-black text-black font-extrabold' 
@@ -393,7 +485,28 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
       </div>
 
       {/* 3. CORE DOUBLE-COLUMN DASHBOARD LAYOUT */}
-      <main id="dashboard-main-columns" className="flex-grow max-w-7xl w-full mx-auto px-4 md:px-6 py-6 md:py-8">
+      {activeView === 'withdrawal' ? (
+        <WithdrawalView 
+          userAccount={userAccount} 
+          onBack={() => {
+            setActiveView('dashboard');
+            setActiveSubTab('Overview');
+          }} 
+          currentBalance={currentBalance}
+          records={withdrawalRecords}
+          onAddRecord={(newRecord) => {
+            setWithdrawalRecords(prev => [newRecord, ...prev]);
+          }}
+          onWithdrawalExecuted={(amount, fee) => {
+            setCurrentBalance(prev => Math.max(0, prev - amount));
+          }}
+          onViewExplorer={(record) => {
+            setSelectedRecord(record);
+            setActiveView('explorer');
+          }}
+        />
+      ) : (
+        <main id="dashboard-main-columns" className="flex-grow max-w-7xl w-full mx-auto px-4 md:px-6 py-6 md:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           
           {/* ==================== LEFT COLUMN: MULTI CARDS AND ESTIMATION ==================== */}
@@ -477,7 +590,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
 
                   <div className="flex items-baseline space-x-1.5">
                     <span className="font-sans font-extrabold text-[42px] tracking-tight text-slate-950 leading-none">
-                      {balanceVisible ? '230,980.95' : '•••••'}
+                      {balanceVisible ? currentBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '•••••'}
                     </span>
                     <span className="text-slate-500 font-semibold text-[15px] flex items-center space-x-0.5">
                       <span>USD</span>
@@ -518,7 +631,13 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                 <button className="bg-[#00a223] hover:bg-[#008f1e] text-white text-xs font-bold px-5 py-2.5 rounded-full flex items-center space-x-1 transition-colors shadow-xs cursor-pointer">
                   <span>Deposit</span>
                 </button>
-                <button className="bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold px-5 py-2.5 rounded-full border border-slate-200 flex items-center space-x-1 transition-all">
+                <button 
+                  onClick={() => {
+                    setActiveSubTab('Funding');
+                    setActiveView('withdrawal');
+                  }}
+                  className="bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold px-5 py-2.5 rounded-full border border-slate-200 flex items-center space-x-1 transition-all cursor-pointer"
+                >
                   <span>Withdraw</span>
                 </button>
                 <button className="bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold px-5 py-2.5 rounded-full border border-slate-200 flex items-center space-x-1 transition-all">
@@ -878,6 +997,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
 
         </div>
       </main>
+      )}
 
       {/* 4. COMPREHENSIVE PLATFORM FOOTER */}
       <footer id="dashboard-light-footer" className="bg-white border-t border-gray-200 py-6 text-center text-xs text-slate-400">
