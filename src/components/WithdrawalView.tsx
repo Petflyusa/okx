@@ -5,6 +5,7 @@
 
 import { useState, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLanguage } from '../locales';
 import { 
   ChevronDown, 
   Check, 
@@ -52,6 +53,7 @@ export default function WithdrawalView({
   onWithdrawalExecuted,
   onViewExplorer
 }: WithdrawalViewProps) {
+  const { language, t } = useLanguage();
   // Navigation inside withdrawal
   const [activeHistoryTab, setActiveHistoryTab] = useState<'USDT' | 'All'>('USDT');
   
@@ -224,11 +226,13 @@ export default function WithdrawalView({
             className="p-1 px-3 py-1.5 border border-slate-200 rounded-md bg-white hover:bg-slate-50 text-xs font-semibold flex items-center space-x-1 text-slate-600 cursor-pointer shadow-xs"
           >
             <ArrowRight className="w-3.5 h-3.5 rotate-180" />
-            <span>Back to Dashboard</span>
+            <span>{language === 'ZH' ? '返回資產中心' : 'Back to Dashboard'}</span>
           </button>
         </div>
 
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight font-sans mb-8">Withdrawal</h1>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight font-sans mb-8">
+          {language === 'ZH' ? '提幣 / 轉帳' : 'Withdrawal'}
+        </h1>
 
         {/* Withdrawal Successful Visual Card */}
         <AnimatePresence>
@@ -244,9 +248,15 @@ export default function WithdrawalView({
                   <Check className="w-6 h-6 stroke-[3]" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-emerald-900 text-base">Withdrawal Order Placed Successfully</h3>
+                  <h3 className="font-extrabold text-emerald-900 text-base">
+                    {language === 'ZH' ? '提幣網路授權成功' : 'Withdrawal Order Placed Successfully'}
+                  </h3>
                   <p className="text-emerald-700 text-xs mt-0.5">
-                    Your request to withdraw <span className="font-bold">{lastExecutedAmount.toLocaleString()} USDT</span> is currently pending blockchain processing.
+                    {language === 'ZH' ? (
+                      <>您的提幣申請 <span className="font-bold">{lastExecutedAmount.toLocaleString()} USDT</span> 已成功發送到區塊鏈網絡關卡，正在等待鏈上爆塊確認。</>
+                    ) : (
+                      <>Your request to withdraw <span className="font-bold">{lastExecutedAmount.toLocaleString()} USDT</span> is currently pending blockchain processing.</>
+                    )}
                   </p>
                 </div>
               </div>
@@ -254,7 +264,7 @@ export default function WithdrawalView({
                 onClick={() => setWithdrawalSuccess(false)}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-5 py-2.5 rounded-full transition-colors"
               >
-                Done
+                {language === 'ZH' ? '確認' : 'Done'}
               </button>
             </motion.div>
           )}
@@ -272,7 +282,9 @@ export default function WithdrawalView({
                 <div className="w-6 h-6 rounded-full bg-slate-100 border border-emerald-500 flex items-center justify-center text-emerald-600 text-xs font-black">
                   <Check className="w-3.5 h-3.5" />
                 </div>
-                <h3 className="font-extrabold text-slate-950 text-sm tracking-tight text-slate-900">Select crypto</h3>
+                <h3 className="font-extrabold text-slate-950 text-sm tracking-tight text-slate-900">
+                  {language === 'ZH' ? '選擇幣種' : 'Select crypto'}
+                </h3>
               </div>
 
               {/* USDT Selection Dropdown Trigger */}
@@ -311,7 +323,7 @@ export default function WithdrawalView({
                     >
                       <div className="flex items-center space-x-3">
                         <div className="w-6 h-6 rounded-full bg-[#f3ba2f] flex items-center justify-center text-white text-xs font-black">₿</div>
-                        <span className="font-bold text-xs text-slate-500">BTC (No balance)</span>
+                        <span className="font-bold text-xs text-slate-500">{language === 'ZH' ? 'BTC (無餘額)' : 'BTC (No balance)'}</span>
                       </div>
                     </button>
                   </div>
@@ -325,7 +337,9 @@ export default function WithdrawalView({
                 <div className="w-6 h-6 rounded-full bg-slate-950 flex items-center justify-center text-white text-xs font-black">
                   2
                 </div>
-                <h3 className="font-extrabold text-slate-950 text-sm tracking-tight text-slate-900">Set destination</h3>
+                <h3 className="font-extrabold text-slate-950 text-sm tracking-tight text-slate-900">
+                  {language === 'ZH' ? '設置提幣目的地' : 'Set destination'}
+                </h3>
               </div>
 
               {/* tabs: On-chain / OKX Internal */}
@@ -334,13 +348,13 @@ export default function WithdrawalView({
                   onClick={() => setDestinationTab('onchain')}
                   className={`pb-2.5 px-4 pr-6 border-b-2 transition-all cursor-pointer ${destinationTab === 'onchain' ? 'border-slate-950 text-slate-950 font-black' : 'border-transparent hover:text-slate-600'}`}
                 >
-                  On-chain addresses
+                  {language === 'ZH' ? '鏈上提現地址' : 'On-chain addresses'}
                 </button>
                 <button 
                   onClick={() => setDestinationTab('okx')}
                   className={`pb-2.5 px-4 pr-6 border-b-2 transition-all cursor-pointer ${destinationTab === 'okx' ? 'border-slate-950 text-slate-950 font-black' : 'border-transparent hover:text-slate-600'}`}
                 >
-                  OKX users
+                  {language === 'ZH' ? 'OKX 內部免手續費轉帳' : 'OKX users'}
                 </button>
               </div>
 
@@ -349,7 +363,7 @@ export default function WithdrawalView({
                   
                   {/* Network Selection Field */}
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-slate-400">Network</label>
+                    <label className="block text-xs font-semibold text-slate-400">{language === 'ZH' ? '提幣網絡' : 'Network'}</label>
                     <div className="relative">
                       <button 
                         onClick={() => setShowNetworkDropdown(!showNetworkDropdown)}
@@ -362,7 +376,9 @@ export default function WithdrawalView({
                           <span className="text-xs font-bold text-slate-800">{network}</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span className="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded font-bold">Fee 1.5 USDT</span>
+                          <span className="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded font-bold">
+                            {language === 'ZH' ? '手續費 1.5 USDT' : 'Fee 1.5 USDT'}
+                          </span>
                           <X className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 shrink-0" onClick={(e) => { e.stopPropagation(); setNetwork('(Select Network)'); }} />
                         </div>
                       </button>
@@ -373,14 +389,14 @@ export default function WithdrawalView({
                             onClick={() => { setNetwork('Tron (TRC20)'); setShowNetworkDropdown(false); }}
                             className="w-full text-left px-4 py-3 hover:bg-slate-50 flex items-center justify-between text-xs font-semibold border-b border-light"
                           >
-                            <span className="text-slate-800">Tron (TRC20) <span className="text-[10px] text-slate-400 ml-2">(Estimated time: ~2 mins)</span></span>
+                            <span className="text-slate-800">Tron (TRC20) <span className="text-[10px] text-slate-400 ml-2">{language === 'ZH' ? '(預估入帳：約 2 分鐘)' : '(Estimated time: ~2 mins)'}</span></span>
                             <span className="text-slate-500 font-bold font-mono">1.5 USDT</span>
                           </button>
                           <button 
                             onClick={() => { setNetwork('Ethereum (ERC20)'); setShowNetworkDropdown(false); }}
                             className="w-full text-left px-4 py-3 hover:bg-slate-50 flex items-center justify-between text-xs font-semibold"
                           >
-                            <span className="text-slate-800">Ethereum (ERC20) <span className="text-[10px] text-slate-400 ml-2">(Estimated time: ~5 mins)</span></span>
+                            <span className="text-slate-800">Ethereum (ERC20) <span className="text-[10px] text-slate-400 ml-2">{language === 'ZH' ? '(預估入帳：約 5 分鐘)' : '(Estimated time: ~5 mins)'}</span></span>
                             <span className="text-slate-500 font-bold font-mono">15.0 USDT</span>
                           </button>
                         </div>
@@ -391,19 +407,19 @@ export default function WithdrawalView({
                   {/* Address Field (with Suggestion trigger) */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
-                      <label className="font-semibold text-slate-400">Address</label>
+                      <label className="font-semibold text-slate-400">{language === 'ZH' ? '提幣地址' : 'Address'}</label>
                       <button 
                         onClick={() => setShowAddressBook(!showAddressBook)}
                         className="text-slate-800 hover:text-black font-extrabold flex items-center space-x-0.5 cursor-pointer"
                       >
-                        <span>Manage address book &gt;</span>
+                        <span>{language === 'ZH' ? '管理常用地址簿 >' : 'Manage address book >'}</span>
                       </button>
                     </div>
 
                     <div className="relative">
                       <input 
                         type="text"
-                        placeholder="Enter address or select from address book"
+                        placeholder={language === 'ZH' ? '請輸入或粘貼提幣地址' : 'Enter address or select from address book'}
                         value={address}
                         onChange={(e) => { setAddress(e.target.value); setAddressError(''); }}
                         className={`w-full bg-slate-50 border ${addressError ? 'border-red-400 focus:ring-red-500' : 'border-gray-100 focus:border-slate-300'} rounded-xl px-4 py-3.5 text-xs text-slate-900 outline-none font-semibold focus:bg-white focus:ring-1 focus:ring-slate-300 transition-all pr-10`}
@@ -426,7 +442,9 @@ export default function WithdrawalView({
                     {/* Quick address selection suggestions */}
                     {showAddressBook && (
                       <div className="border border-slate-100 rounded-xl bg-slate-50/50 p-3 mt-1 space-y-2 animate-in fade-in duration-100">
-                        <p className="text-[10px] font-bold text-slate-400">SELECT FROM WALLET ADDRESSES</p>
+                        <p className="text-[10px] font-bold text-slate-400">
+                          {language === 'ZH' ? '從常用地址簿中快速選擇' : 'SELECT FROM WALLET ADDRESSES'}
+                        </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                           {savedAddresses.map((sa, idx) => (
                             <button
@@ -449,7 +467,9 @@ export default function WithdrawalView({
                 </div>
               ) : (
                 <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 text-xs font-medium text-slate-500 leading-relaxed">
-                  OKX Internal Withdrawals are secure, commission-free transfers to other security cleared OKX user panels directly inside our centralized network.
+                  {language === 'ZH' 
+                    ? 'OKX 內部轉账安全可靠，可零手續費、極速轉帳到其他通過身份審核認證的 OKX 註冊帳戶中。' 
+                    : 'OKX Internal Withdrawals are secure, commission-free transfers to other security cleared OKX user panels directly inside our centralized network.'}
                 </div>
               )}
             </div>
@@ -460,16 +480,18 @@ export default function WithdrawalView({
                 <div className="w-6 h-6 rounded-full bg-slate-950 flex items-center justify-center text-white text-xs font-black">
                   3
                 </div>
-                <h3 className="font-extrabold text-slate-950 text-sm tracking-tight text-slate-900">Set withdrawal amount</h3>
+                <h3 className="font-extrabold text-slate-950 text-sm tracking-tight text-slate-900">
+                  {language === 'ZH' ? '輸入提幣數量' : 'Set withdrawal amount'}
+                </h3>
               </div>
 
               <div className="space-y-3">
                 
                 {/* Available balance indicator */}
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-slate-400">Amount</span>
+                  <span className="font-bold text-slate-400">{language === 'ZH' ? '提幣數量' : 'Amount'}</span>
                   <span className="text-slate-500 font-semibold">
-                    Available: <span className="font-extrabold text-slate-800">{currentBalance.toLocaleString()} USDT</span>
+                    {language === 'ZH' ? '可用餘額: ' : 'Available: '} <span className="font-extrabold text-slate-800">{currentBalance.toLocaleString()} USDT</span>
                   </span>
                 </div>
 
@@ -477,7 +499,7 @@ export default function WithdrawalView({
                 <div className="relative">
                   <input 
                     type="number"
-                    placeholder="Min 2 USDT"
+                    placeholder={language === 'ZH' ? '最小提幣限額 2 USDT' : 'Min 2 USDT'}
                     value={amount}
                     onChange={(e) => { setAmount(e.target.value); setAmountError(''); }}
                     className={`w-full bg-slate-50 border ${amountError ? 'border-red-400 focus:ring-red-500' : 'border-gray-100 focus:border-slate-300'} rounded-xl px-4 py-3.5 text-xs text-slate-900 outline-none font-semibold focus:bg-white focus:ring-1 focus:ring-slate-300 transition-all pr-20`}
@@ -488,7 +510,7 @@ export default function WithdrawalView({
                       onClick={() => { setAmount(Math.max(0, currentBalance - 1.5).toFixed(2)); setAmountError(''); }}
                       className="bg-slate-100 hover:bg-slate-200 text-[10px] font-black tracking-wider px-2 py-1 rounded text-slate-800 cursor-pointer"
                     >
-                      MAX
+                      {language === 'ZH' ? '最大' : 'MAX'}
                     </button>
                   </div>
                 </div>
@@ -502,15 +524,15 @@ export default function WithdrawalView({
 
                 <div className="bg-slate-50 rounded-xl p-3 text-[10px] font-semibold text-slate-400 flex flex-col space-y-1">
                   <div className="flex justify-between">
-                    <span>Subtotal Amount:</span>
+                    <span>{language === 'ZH' ? '扣款總金額：' : 'Subtotal Amount:'}</span>
                     <span className="text-slate-800 font-extrabold">{amount ? parseFloat(amount).toLocaleString() : '0.00'} USDT</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Network Fee:</span>
+                    <span>{language === 'ZH' ? '網絡手續費：' : 'Network Fee:'}</span>
                     <span className="text-slate-800 font-extrabold">1.50 USDT</span>
                   </div>
                   <div className="flex justify-between border-t border-slate-200/60 pt-1 mt-1 text-slate-500">
-                    <span>You receive (Estimated):</span>
+                    <span>{language === 'ZH' ? '實際到帳 (預估)：' : 'You receive (Estimated):'}</span>
                     <span className="text-slate-900 font-black text-xs">
                       {amount && parseFloat(amount) > 1.5 ? (parseFloat(amount) - 1.5).toLocaleString() : '0.00'} USDT
                     </span>
@@ -523,7 +545,7 @@ export default function WithdrawalView({
                   className="w-full bg-slate-950 hover:bg-slate-900 text-white font-black text-xs py-4 rounded-xl cursor-pointer shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2 text-center"
                 >
                   <Lock className="w-3.5 h-3.5" />
-                  <span>Submit withdrawal clearance</span>
+                  <span>{language === 'ZH' ? '提交安全合約審核授權' : 'Submit withdrawal clearance'}</span>
                 </button>
 
               </div>
@@ -536,26 +558,36 @@ export default function WithdrawalView({
             
             {/* FAQ CARD */}
             <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-              <h4 className="font-extrabold text-slate-900 text-sm tracking-tight mb-4">FAQ</h4>
+              <h4 className="font-extrabold text-slate-900 text-sm tracking-tight mb-4">{language === 'ZH' ? '常見問題' : 'FAQ'}</h4>
               <div className="space-y-4 text-xs font-bold text-slate-700">
                 <div className="pb-3 border-b border-slate-50">
-                  <p className="hover:text-black transition-colors cursor-pointer">How do I make a withdrawal?</p>
+                  <p className="hover:text-black transition-colors cursor-pointer">
+                    {language === 'ZH' ? '如何發起安全提現？' : 'How do I make a withdrawal?'}
+                  </p>
                 </div>
                 <div className="pb-3 border-b border-slate-50">
-                  <p className="hover:text-black transition-colors cursor-pointer">Why have I still not received my withdrawal?</p>
+                  <p className="hover:text-black transition-colors cursor-pointer">
+                    {language === 'ZH' ? '為什麼我的提現資產遲遲未到帳？' : 'Why have I still not received my withdrawal?'}
+                  </p>
                 </div>
                 <div className="pb-3 border-b border-slate-50">
-                  <p className="hover:text-black transition-colors cursor-pointer">How do I select the correct network for my crypto withdrawals and deposits?</p>
+                  <p className="hover:text-black transition-colors cursor-pointer">
+                    {language === 'ZH' ? '如何為提現與充值選擇正確的區塊鏈通網絡？' : 'How do I select the correct network for my crypto withdrawals and deposits?'}
+                  </p>
                 </div>
                 <div className="pb-1">
-                  <p className="hover:text-black transition-colors cursor-pointer">Do I need to pay fees for deposit and withdrawal?</p>
+                  <p className="hover:text-black transition-colors cursor-pointer">
+                    {language === 'ZH' ? '充值和提現需要支付額外手續費嗎？' : 'Do I need to pay fees for deposit and withdrawal?'}
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* LIMITS INFO CARD */}
             <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-2">
-              <span className="text-[10px] font-bold text-slate-400 block tracking-wider uppercase">24h available limit</span>
+              <span className="text-[10px] font-bold text-slate-400 block tracking-wider uppercase">
+                {language === 'ZH' ? '24小時剩餘安全提現限額' : '24h available limit'}
+              </span>
               <div className="text-slate-800 text-xs font-bold">
                 <span className="text-sm font-black text-slate-950">10,015,223.13</span> / 10,015,223.13 USDT
               </div>
@@ -574,24 +606,24 @@ export default function WithdrawalView({
                 onClick={() => setActiveHistoryTab('USDT')}
                 className={`pb-2.5 px-3 border-b-2 transition-all cursor-pointer ${activeHistoryTab === 'USDT' ? 'border-black text-black font-extrabold' : 'border-transparent hover:text-slate-600'}`}
               >
-                USDT withdrawals
+                {language === 'ZH' ? 'USDT 提幣記錄' : 'USDT withdrawals'}
               </button>
               <button 
                 onClick={() => setActiveHistoryTab('All')}
                 className={`pb-2.5 px-3 border-b-2 transition-all cursor-pointer ${activeHistoryTab === 'All' ? 'border-black text-black font-extrabold' : 'border-transparent hover:text-slate-600'}`}
               >
-                All withdrawals
+                {language === 'ZH' ? '所有提現明細' : 'All withdrawals'}
               </button>
             </div>
 
             <div className="flex items-center space-x-2 shrink-0">
               <button className="flex items-center space-x-1 hover:bg-slate-50 border border-slate-250 text-slate-600 rounded-md p-1.5 px-3 text-[11px] font-bold transition-all shadow-2xs">
                 <Download className="w-3.5 h-3.5" />
-                <span>Export</span>
+                <span>{language === 'ZH' ? '匯出資料' : 'Export'}</span>
               </button>
               <button className="flex items-center space-x-1 hover:bg-slate-50 border border-slate-255 text-slate-600 rounded-md p-1.5 px-3 text-[11px] font-bold transition-all shadow-2xs">
                 <FileText className="w-3.5 h-3.5" />
-                <span>View history</span>
+                <span>{language === 'ZH' ? '歷史資料' : 'View history'}</span>
               </button>
             </div>
           </div>
@@ -601,14 +633,14 @@ export default function WithdrawalView({
             <table className="w-full text-left text-xs text-slate-600 font-semibold border-collapse">
               <thead>
                 <tr className="text-slate-400 border-b border-slate-100 text-[11px]">
-                  <th className="py-3 px-4">Time</th>
-                  <th className="py-3 px-4">Reference no.</th>
-                  <th className="py-3 px-4">Address</th>
-                  <th className="py-3 px-4">Transaction ID</th>
-                  <th className="py-3 px-4">Crypto</th>
-                  <th className="py-3 px-4">Amount</th>
-                  <th className="py-3 px-4 text-right">Fee</th>
-                  <th className="py-3 px-4 text-center">Status</th>
+                  <th className="py-3 px-4">{language === 'ZH' ? '時間' : 'Time'}</th>
+                  <th className="py-3 px-4">{language === 'ZH' ? '參考編號' : 'Reference no.'}</th>
+                  <th className="py-3 px-4">{language === 'ZH' ? '提現地址' : 'Address'}</th>
+                  <th className="py-3 px-4">{language === 'ZH' ? '交易哈希 / TxID' : 'Transaction ID'}</th>
+                  <th className="py-3 px-4">{language === 'ZH' ? '幣種' : 'Crypto'}</th>
+                  <th className="py-3 px-4">{language === 'ZH' ? '提現金額' : 'Amount'}</th>
+                  <th className="py-3 px-4 text-right">{language === 'ZH' ? '手續費' : 'Fee'}</th>
+                  <th className="py-3 px-4 text-center">{language === 'ZH' ? '狀態' : 'Status'}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -667,12 +699,16 @@ export default function WithdrawalView({
                     <td className="py-4 px-4 text-center">
                       <span className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide ${
                         rec.status === 'Sent' 
-                          ? 'bg-green-150 text-green-700' 
-                          : rec.status === 'Processing' 
-                          ? 'bg-amber-100/80 text-amber-700 animate-pulse' 
-                          : 'bg-red-100 text-red-700'
+                           ? 'bg-green-150 text-green-700' 
+                           : rec.status === 'Processing' 
+                           ? 'bg-amber-100/80 text-amber-700 animate-pulse' 
+                           : 'bg-red-100 text-red-700'
                       }`}>
-                        {rec.status}
+                        {rec.status === 'Sent' 
+                          ? (language === 'ZH' ? '已充值到鏈' : 'Sent') 
+                          : rec.status === 'Processing' 
+                          ? (language === 'ZH' ? '人工安全審查中' : 'Processing') 
+                          : (language === 'ZH' ? '出金失敗' : 'Failed')}
                       </span>
                     </td>
                   </tr>
@@ -706,8 +742,12 @@ export default function WithdrawalView({
                 <div className="w-10 h-10 rounded-full bg-slate-950 flex items-center justify-center text-white mx-auto mb-3 shadow-xs">
                   <Lock className="w-4 h-4 stroke-[2.5]" />
                 </div>
-                <h3 className="text-lg font-black tracking-tight text-slate-950">Security Verification</h3>
-                <p className="text-slate-400 text-xs mt-1">Please authorize your asset clearance details securely.</p>
+                <h3 className="text-lg font-black tracking-tight text-slate-950">
+                  {language === 'ZH' ? '多重安全驗證障關卡' : 'Security Verification'}
+                </h3>
+                <p className="text-slate-400 text-xs mt-1">
+                  {language === 'ZH' ? '請授權並核實您的鏈上高額資金下帳安全合約詳情' : 'Please authorize your asset clearance details securely.'}
+                </p>
               </div>
 
               <form onSubmit={handleVerifyRequest} className="space-y-4">
@@ -715,32 +755,38 @@ export default function WithdrawalView({
                 {/* Email OTP Field */}
                 <div className="space-y-1">
                   <div className="flex justify-between items-center text-xs">
-                    <label className="font-bold text-slate-500">Email verification code</label>
+                    <label className="font-bold text-slate-500">
+                      {language === 'ZH' ? '郵箱安全動態驗證碼' : 'Email verification code'}
+                    </label>
                     <button 
                       type="button" 
                       onClick={() => showToast('Security code dispatched to lisaisaacmed@gmail.com')}
                       className="text-amber-500 hover:text-amber-600 font-extrabold cursor-pointer"
                     >
-                      Send code
+                      {language === 'ZH' ? '發送驗證碼' : 'Send code'}
                     </button>
                   </div>
                   <input 
                     type="password"
-                    placeholder="Enter 6-digit email security code"
+                    placeholder={language === 'ZH' ? '請輸入 6 位郵件驗證碼' : 'Enter 6-digit email security code'}
                     maxLength={6}
                     value={emailCode}
                     onChange={(e) => setEmailCode(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs outline-none font-bold text-slate-800 focus:bg-white focus:border-slate-350 transition-all font-mono text-center tracking-widest"
                   />
-                  <span className="block text-[10px] text-slate-400 text-right">Sent to lisaisaacmed@gmail.com</span>
+                  <span className="block text-[10px] text-slate-400 text-right">
+                    {language === 'ZH' ? '已發送至 lisaisaacmed@gmail.com' : 'Sent to lisaisaacmed@gmail.com'}
+                  </span>
                 </div>
 
                 {/* Authenticator Field */}
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-slate-500">Google Authenticator code</label>
+                  <label className="block text-xs font-bold text-slate-500">
+                    {language === 'ZH' ? '谷歌身份驗證器防偽碼 (GA 2FA)' : 'Google Authenticator code'}
+                  </label>
                   <input 
                     type="text"
-                    placeholder="Enter 6-digit authenticator code"
+                    placeholder={language === 'ZH' ? '請輸入 6 位谷歌安全動態碼' : 'Enter 6-digit authenticator code'}
                     maxLength={6}
                     value={googleCode}
                     onChange={(e) => setGoogleCode(e.target.value)}
@@ -767,10 +813,10 @@ export default function WithdrawalView({
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      <span>Clearing ledger authorization...</span>
+                      <span>{language === 'ZH' ? '正在校對安全密鑰...' : 'Clearing ledger authorization...'}</span>
                     </>
                   ) : (
-                    <span>Confirm secure withdraw</span>
+                    <span>{language === 'ZH' ? '確認安全提現' : 'Confirm secure withdraw'}</span>
                   )}
                 </button>
 

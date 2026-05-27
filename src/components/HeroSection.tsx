@@ -6,13 +6,16 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUpDown, Shield, ArrowRight, Play, TrendingUp, Sparkles, CheckCircle, Info } from 'lucide-react';
+import { useLanguage } from '../locales';
 
 interface HeroSectionProps {
   onSignUpSubmit: (email: string) => void;
 }
 
 export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
+  const { language, t } = useLanguage();
   const [emailInput, setEmailInput] = useState('');
+
   const [payAmount, setPayAmount] = useState('100');
   const [receiveAmount, setReceiveAmount] = useState('0.00104');
   const [payCurrency, setPayCurrency] = useState('USD');
@@ -114,24 +117,38 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
           {/* Left Column: Vision Statement, Copy, and Conversion Widget */}
           <div className="lg:col-span-7 space-y-8 text-left">
             
-            {/* Promotional pill */}
+             {/* Promotional pill */}
             <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full text-xs font-semibold">
               <span className="flex h-2 w-2 rounded-full bg-brand"></span>
-              <span className="text-gray-300">McLaren F1 Premium Global Co-Partner</span>
+              <span className="text-gray-300">
+                {language === 'ZH' ? '邁凱倫 F1 車隊全球首席聯合合作夥伴' : 'McLaren F1 Premium Global Co-Partner'}
+              </span>
               <ArrowRight className="w-3.5 h-3.5 text-brand" />
             </div>
 
             {/* Typography Display Headings */}
             <h1 className="font-display font-medium text-4xl sm:text-5xl lg:text-6xl tracking-tight text-white leading-[1.05]">
-              Faster, better, <br />
-              stronger than your <br />
-              <span className="text-brand font-bold relative inline-block">
-                average exchange
-              </span>
+              {language === 'ZH' ? (
+                <>
+                  更快、更好、更強，<br />
+                  超越您對交易平台的 <br />
+                  <span className="text-brand font-bold relative inline-block">
+                    所有想像
+                  </span>
+                </>
+              ) : (
+                <>
+                  Faster, better, <br />
+                  stronger than your <br />
+                  <span className="text-brand font-bold relative inline-block">
+                    average exchange
+                  </span>
+                </>
+              )}
             </h1>
 
-            <p className="text-gray-400 text-lg md:text-xl max-w-xl font-sans font-light leading-relaxed">
-              Buy, sell, and earn crypto securely. Access non-custodial Web3 tools, NFTs, yield pools, and expert-grade trading with the world’s most trusted reserve ratio exchange.
+            <p className="text-gray-400 text-sm sm:text-lg max-w-xl font-sans font-light leading-relaxed">
+              {t('heroSub')}
             </p>
 
             {/* Quick Email Registration Input */}
@@ -140,7 +157,7 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
                 id="hero-email-input"
                 type="email"
                 required
-                placeholder="Email address or phone number"
+                placeholder={language === 'ZH' ? '請輸入您的電子郵件或手機號碼' : 'Email address or phone number'}
                 className="flex-1 bg-[#101319] hover:bg-[#181d26] focus:bg-[#181d26] text-white border border-dark-border focus:border-brand rounded-full px-5 py-3.5 text-[15px] outline-none transition-all"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
@@ -150,7 +167,7 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
                 type="submit"
                 className="bg-white hover:bg-gray-100 text-black font-semibold rounded-full px-8 py-3.5 text-[15px] transition-all flex items-center justify-center space-x-1 hover:scale-[1.02] duration-200 cursor-pointer"
               >
-                <span>Try OKX Now</span>
+                <span>{language === 'ZH' ? '立即體驗 OKX' : 'Try OKX Now'}</span>
                 <ArrowRight className="w-4.5 h-4.5" />
               </button>
             </form>
@@ -158,30 +175,38 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
             <div className="flex items-center space-x-3.5 text-xs text-gray-500 font-mono pt-1">
               <div className="flex items-center space-x-1.5">
                 <Shield className="w-4 h-4 text-brand" />
-                <span>1:1 Audited Proof of Reserves</span>
+                <span>{language === 'ZH' ? '1:1 被審計默克爾樹儲備明細' : '1:1 Audited Proof of Reserves'}</span>
               </div>
               <span>•</span>
               <div className="flex items-center space-x-1.5">
                 <Sparkles className="w-4 h-4 text-brand" />
-                <span>Zero-Fee Registrations</span>
+                <span>{language === 'ZH' ? '註冊領盲盒零費用' : 'Zero-Fee Registrations'}</span>
               </div>
             </div>
 
             {/* Brand Partners Row */}
             <div className="pt-6 border-t border-dark-border/40 max-w-lg">
-              <p className="text-[11px] font-mono tracking-wider text-gray-400 uppercase mb-3.5">PROUD OFFICIAL PARTNER OF</p>
+              <p className="text-[11px] font-mono tracking-wider text-gray-400 uppercase mb-3.5">
+                {language === 'ZH' ? '邁凱倫、曼城與特里貝卡官方合作夥伴' : 'PROUD OFFICIAL PARTNER OF'}
+              </p>
               <div className="grid grid-cols-3 gap-4 items-center opacity-40 hover:opacity-75 transition-opacity duration-300">
                 <div className="flex flex-col text-left">
                   <span className="text-white font-display font-bold text-sm tracking-widest uppercase">McLAREN</span>
-                  <span className="text-[9px] font-mono leading-none tracking-tight text-gray-400">Formula 1 Team Partner</span>
+                  <span className="text-[9px] font-mono leading-none tracking-tight text-gray-400">
+                    {language === 'ZH' ? '官方一級方程式合作夥伴' : 'Formula 1 Team Partner'}
+                  </span>
                 </div>
                 <div className="flex flex-col text-left border-l border-gray-800 pl-4">
                   <span className="text-white font-display font-medium text-sm tracking-tight">Man City FC</span>
-                  <span className="text-[9px] font-mono leading-none tracking-tight text-gray-400">Official Sleeve Co-Partner</span>
+                  <span className="text-[9px] font-mono leading-none tracking-tight text-gray-400">
+                    {language === 'ZH' ? '球衣官方聯合贊助商' : 'Official Sleeve Co-Partner'}
+                  </span>
                 </div>
                 <div className="flex flex-col text-left border-l border-gray-800 pl-4">
                   <span className="text-white font-display font-bold text-sm tracking-wider uppercase">Tribeca</span>
-                  <span className="text-[9px] font-mono leading-none tracking-tight text-gray-400">Festival Primary Partner</span>
+                  <span className="text-[9px] font-mono leading-none tracking-tight text-gray-400">
+                    {language === 'ZH' ? '電影節主要合作夥伴' : 'Festival Primary Partner'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -204,7 +229,7 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
                     }}
                     className={`px-4 py-1.5 rounded-md transition-colors ${swapMode === 'buy' ? 'bg-brand text-black font-bold' : 'text-gray-400'}`}
                   >
-                    Buy Crypto
+                    {language === 'ZH' ? '極速買幣' : 'Buy Crypto'}
                   </button>
                   <button
                     onClick={() => {
@@ -214,13 +239,13 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
                     }}
                     className={`px-4 py-1.5 rounded-md transition-colors ${swapMode === 'sell' ? 'bg-brand text-black font-bold' : 'text-gray-400'}`}
                   >
-                    Sell Crypto
+                    {language === 'ZH' ? '極速賣幣' : 'Sell Crypto'}
                   </button>
                 </div>
                 
                 <div className="flex items-center text-xs text-slate-400 font-mono">
                   <TrendingUp className="w-3.5 h-3.5 text-brand mr-1" />
-                  <span>Fee: 0.1%</span>
+                  <span>{language === 'ZH' ? '手續費：0.1%' : 'Fee: 0.1%'}</span>
                 </div>
               </div>
 
@@ -228,10 +253,10 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
               <form onSubmit={handleOpenSwapSuccess} className="space-y-4 mt-5">
                 
                 {/* Pay Row */}
-                <div className="bg-[#12161f]/80 rounded-xl p-4 border border-dark-border/40 hover:border-brand/20 transition-all">
+                <div className="bg-[#12161f]/80 rounded-xl p-4 border border-[#1d2433] hover:border-brand/20 transition-all">
                   <div className="flex justify-between items-center text-xs text-gray-400 mb-1.5">
-                    <span>You {swapMode === 'buy' ? 'Pay' : 'Sell'}</span>
-                    <span>Available: {swapMode === 'buy' ? '$10,000.00' : '0.45 BTC'}</span>
+                    <span>{language === 'ZH' ? '您支付' : `You ${swapMode === 'buy' ? 'Pay' : 'Sell'}`}</span>
+                    <span>{language === 'ZH' ? '可用餘額' : 'Available'}: {swapMode === 'buy' ? '$10,000.00' : '0.45 BTC'}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <input
@@ -285,10 +310,10 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
                 </div>
 
                 {/* Receive Row */}
-                <div className="bg-[#12161f]/80 rounded-xl p-4 border border-dark-border/40 hover:border-brand/20 transition-all">
+                <div className="bg-[#12161f]/80 rounded-xl p-4 border border-[#1d2433] hover:border-brand/20 transition-all">
                   <div className="flex justify-between items-center text-xs text-gray-400 mb-1.5">
-                    <span>You Get (Est.)</span>
-                    <span>No hidden fees</span>
+                    <span>{language === 'ZH' ? '預期獲得' : 'You Get (Est.)'}</span>
+                    <span>{language === 'ZH' ? '無隱藏費用' : 'No hidden fees'}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span id="swap-receive-amount" className="font-semibold text-2xl text-white outline-none flex-1">
@@ -328,7 +353,7 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
                 {/* Price indicators */}
                 <div className="bg-[#090b0e] p-3.5 rounded-lg border border-dark-border/45 text-xs text-gray-400 flex flex-col gap-1">
                   <div className="flex justify-between items-center">
-                    <span>Rate:</span>
+                    <span>{language === 'ZH' ? '兌換匯率：' : 'Rate:'}</span>
                     <span className="font-mono text-white">
                       {swapMode === 'buy' 
                         ? `1 ${receiveCurrency} ≈ ${(prices[receiveCurrency] * (fiatRates[payCurrency] || 1.0)).toLocaleString()} ${payCurrency}`
@@ -337,10 +362,10 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
                     </span>
                   </div>
                   <div className="flex justify-between items-center border-t border-dark-border/30 pt-1 mt-1 font-sans">
-                    <span className="flex items-center text-[11px] text-gray-400 gap-1">
-                      <Info className="w-3 h-3 text-slate-500" /> Secure Price Protection active
+                    <span className="flex items-center text-[11px] text-gray-400 gap-1 font-sans">
+                      <Info className="w-3 h-3 text-slate-500" /> {language === 'ZH' ? '安全價格保護系統已啟用' : 'Secure Price Protection active'}
                     </span>
-                    <span className="text-brand font-bold text-[11px]">Best price across 15 liquidity pools</span>
+                    <span className="text-brand font-bold text-[11px]">{language === 'ZH' ? '聚合全球 15 擁有最優報價' : 'Best price across 15 liquidity pools'}</span>
                   </div>
                 </div>
 
@@ -350,7 +375,12 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
                   type="submit"
                   className="w-full bg-brand hover:bg-brand-hover text-black font-semibold rounded-xl py-4 transition-all duration-200 transform hover:scale-[1.01] flex items-center justify-center space-x-1 font-sans text-[15px] cursor-pointer"
                 >
-                  <span>{swapMode === 'buy' ? 'Buy' : 'Sell'} {swapMode === 'buy' ? receiveCurrency : payCurrency} Instant</span>
+                  <span>
+                    {language === 'ZH' 
+                      ? `${swapMode === 'buy' ? '安全買入' : '安全賣出'} ${swapMode === 'buy' ? receiveCurrency : payCurrency} 極速成交` 
+                      : `${swapMode === 'buy' ? 'Buy' : 'Sell'} ${swapMode === 'buy' ? receiveCurrency : payCurrency} Instant`
+                    }
+                  </span>
                   <Play className="w-3.5 h-3.5 fill-black ml-1 scale-90" />
                 </button>
               </form>
@@ -418,30 +448,37 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
               <div className="w-16 h-16 bg-brand/10 text-brand border border-brand/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold font-display text-white mb-2">Order Submitted Securely</h3>
+              <h3 className="text-xl font-bold font-display text-white mb-2">
+                {language === 'ZH' ? '委託交易訂單安全提交' : 'Order Submitted Securely'}
+              </h3>
               <p className="text-xs text-gray-400 mb-6 px-2">
-                Your order is being routed via our matching engine. Since this is a high-fidelity demonstration, we simulated a direct secure liquidity match for you.
+                {language === 'ZH' 
+                  ? '您的訂單已安全發送至我們的中央深度撮合引擎。當前平台自動匹配最優的全球加密流動性。' 
+                  : 'Your order is being routed via our matching engine. Since this is a high-fidelity demonstration, we simulated a direct secure liquidity match for you.'
+                }
               </p>
               
               {/* Order Invoice Block */}
               <div className="bg-[#101319] p-4 rounded-xl border border-dark-border/40 text-left text-xs space-y-2 font-mono mb-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Transaction Type</span>
-                  <span className="text-white uppercase font-bold text-brand">{swapMode} Mode</span>
+                  <span className="text-gray-400">{language === 'ZH' ? '交易模式' : 'Transaction Type'}</span>
+                  <span className="text-white uppercase font-bold text-brand">
+                    {swapMode} {language === 'ZH' ? '模式' : 'Mode'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Total Spent</span>
+                  <span className="text-gray-400">{language === 'ZH' ? '支付總計' : 'Total Spent'}</span>
                   <span className="text-white font-semibold">{payAmount} {payCurrency}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Acquired Funds</span>
+                  <span className="text-gray-400">{language === 'ZH' ? '獲得份額' : 'Acquired Funds'}</span>
                   <span className="text-white font-semibold">{receiveAmount} {receiveCurrency}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Status</span>
+                  <span className="text-gray-400">{language === 'ZH' ? '當前狀態' : 'Status'}</span>
                   <span className="text-brand flex items-center">
                     <span className="h-1.5 w-1.5 bg-brand rounded-full mr-1.5 animate-pulse"></span>
-                    Matching Liquidity
+                    {language === 'ZH' ? '自動匹配最優匯率中' : 'Matching Liquidity'}
                   </span>
                 </div>
               </div>
@@ -452,10 +489,13 @@ export default function HeroSection({ onSignUpSubmit }: HeroSectionProps) {
                   onClick={() => setSuccessModalOpen(false)}
                   className="w-full bg-brand hover:bg-brand-hover text-black font-semibold py-3 rounded-xl transition-colors font-sans"
                 >
-                  Excellent, Thank You
+                  {language === 'ZH' ? '非常棒，關閉提示' : 'Excellent, Thank You'}
                 </button>
                 <p className="text-[10px] text-gray-500 font-mono">
-                  You can secure real accounts via the main OKX register prompts.
+                  {language === 'ZH' 
+                    ? '您此時還可以點擊右上角註冊開通正式的交易賬號保護您的永久持倉。' 
+                    : 'You can secure real accounts via the main OKX register prompts.'
+                  }
                 </p>
               </div>
             </motion.div>

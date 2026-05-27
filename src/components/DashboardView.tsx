@@ -5,6 +5,7 @@
 
 import { useState, FormEvent, MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLanguage } from '../locales';
 import { 
   Eye, 
   EyeOff, 
@@ -42,6 +43,7 @@ interface DashboardProps {
 }
 
 export default function DashboardView({ userAccount, onLogout }: DashboardProps) {
+  const { language, setLanguage, t } = useLanguage();
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [currentBalance, setCurrentBalance] = useState(230980.95);
   const [activeView, setActiveView] = useState<'dashboard' | 'withdrawal' | 'explorer'>('dashboard');
@@ -201,6 +203,31 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
       }
       setChatHistory(prev => [...prev, { sender: 'bot', text: reply }]);
     }, 1200);
+  };
+
+  const translateTab = (tab: string) => {
+    if (language === 'ZH') {
+      switch(tab) {
+        case 'Overview': return '資產總覽';
+        case 'Profile': return '個人檔案';
+        case 'Security': return '安全中心';
+        case 'Verification': return '身分認證';
+        case 'Preferences': return '偏好設置';
+        case 'Sub-accounts': return '子帳戶';
+        case 'API and connections': return 'API與連結';
+        case 'Third-party authorization': return '第三方授權';
+        case 'Funding': return '資金帳戶';
+        case 'Trading': return '交易帳戶';
+        case 'Grow': return '金融帳戶';
+        case 'Analysis': return '盈虧分析';
+        case 'Order center': return '訂單中心';
+        case 'Fees': return '手續費率';
+        case 'Account statement': return '帳戶明細';
+        case 'PoR reports': return '準備金報告';
+        default: return tab;
+      }
+    }
+    return tab;
   };
 
   if (activeView === 'explorer' && selectedRecord) {
@@ -445,8 +472,12 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
               <Bell className="w-4 h-4" />
               <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-red-500 rounded-full"></span>
             </button>
-            <button className="p-1.5 hover:bg-slate-100 rounded-full text-slate-500 hover:text-black">
-              <Globe className="w-4 h-4" />
+            <button 
+              onClick={() => setLanguage(language === 'EN' ? 'ZH' : 'EN')}
+              className="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-black border border-slate-200/70 hover:border-slate-300 rounded-full transition-all duration-300 transform active:scale-95 flex items-center space-x-1.5 shadow-xs cursor-pointer group"
+            >
+              <Globe className="w-3.5 h-3.5 text-slate-500 group-hover:text-black transition-colors" />
+              <span className="text-[10px] font-mono font-extrabold select-none uppercase tracking-wide text-slate-500 group-hover:text-black transition-colors">{language}</span>
             </button>
 
           </div>
@@ -458,29 +489,29 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
         <div className="max-w-7xl mx-auto flex space-x-6 text-xs text-slate-500 font-semibold h-11 items-end">
           {(activeView === 'withdrawal' ? fundingSubTabs : subTabs).map(tab => (
             <button
-              key={tab}
-              onClick={() => {
-                setActiveSubTab(tab);
-                if (activeView === 'withdrawal') {
-                  if (tab !== 'Funding') {
-                    setActiveView('dashboard');
-                    setActiveSubTab('Overview');
-                  }
-                } else {
-                  if (tab === 'Funding') {
-                    setActiveView('withdrawal');
-                  }
-                }
-              }}
-              className={`pb-3 border-b-2 px-1 transition-all inline-block whitespace-nowrap cursor-pointer ${
-                activeSubTab === tab 
-                  ? 'border-black text-black font-extrabold' 
-                  : 'border-transparent hover:text-black'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+               key={tab}
+               onClick={() => {
+                 setActiveSubTab(tab);
+                 if (activeView === 'withdrawal') {
+                   if (tab !== 'Funding') {
+                     setActiveView('dashboard');
+                     setActiveSubTab('Overview');
+                   }
+                 } else {
+                   if (tab === 'Funding') {
+                     setActiveView('withdrawal');
+                   }
+                 }
+               }}
+               className={`pb-3 border-b-2 px-1 transition-all inline-block whitespace-nowrap cursor-pointer ${
+                 activeSubTab === tab 
+                   ? 'border-black text-black font-extrabold' 
+                   : 'border-transparent hover:text-black'
+               }`}
+             >
+               {translateTab(tab)}
+             </button>
+           ))}
         </div>
       </div>
 
@@ -567,7 +598,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                             exit={{ opacity: 0 }} 
                             className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[9px] px-1.5 py-0.5 rounded font-bold whitespace-nowrap"
                           >
-                            Copied!
+                            {language === 'ZH' ? '已複製！' : 'Copied!'}
                           </motion.span>
                         )}
                       </AnimatePresence>
@@ -575,10 +606,10 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                   </div>
                 </div>
               </div>
-
+ 
               <div className="mt-4 md:mt-0 flex items-center space-x-2">
                 <button className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-4 py-2 rounded-full border border-slate-200 transition-colors">
-                  View profile
+                  {language === 'ZH' ? '查看個人檔案' : 'View profile'}
                 </button>
               </div>
             </div>
@@ -589,7 +620,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
               <div className="flex flex-col md:flex-row justify-between items-start space-y-4 md:space-y-0">
                 <div className="space-y-1.5">
                   <div className="flex items-center space-x-2 text-[13px] font-sans font-semibold text-slate-500">
-                    <span>Estimated total value</span>
+                    <span>{language === 'ZH' ? '總資產估值' : 'Estimated total value'}</span>
                     <button 
                       onClick={() => setBalanceVisible(!balanceVisible)}
                       className="text-slate-400 hover:text-slate-800 p-0.5 rounded transition-all"
@@ -610,7 +641,9 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
 
                   {/* Today's PnL formatted custom widget */}
                   <div className="flex items-center space-x-1 text-xs">
-                    <span className="text-slate-400 border-b border-dashed border-slate-300 pb-0.5">Today's PnL</span>
+                    <span className="text-slate-400 border-b border-dashed border-slate-300 pb-0.5">
+                      {language === 'ZH' ? '今日盈虧' : "Today's PnL"}
+                    </span>
                     <span className="text-red-500 font-bold px-1.5 py-0.5 rounded-md flex items-center space-x-0.5">
                       <TrendingDown className="w-3.5 h-3.5" />
                       <span>-$6,336.37 (-2.67%)</span>
@@ -639,7 +672,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
               {/* ACTION PILL BUTTONS */}
               <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
                 <button className="bg-[#00a223] hover:bg-[#008f1e] text-white text-xs font-bold px-5 py-2.5 rounded-full flex items-center space-x-1 transition-colors shadow-xs cursor-pointer">
-                  <span>Deposit</span>
+                  <span>{language === 'ZH' ? '充值資產' : 'Deposit'}</span>
                 </button>
                 <button 
                   onClick={() => {
@@ -648,13 +681,13 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                   }}
                   className="bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold px-5 py-2.5 rounded-full border border-slate-200 flex items-center space-x-1 transition-all cursor-pointer"
                 >
-                  <span>Withdraw</span>
+                  <span>{language === 'ZH' ? '提現資產' : 'Withdraw'}</span>
                 </button>
                 <button className="bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold px-5 py-2.5 rounded-full border border-slate-200 flex items-center space-x-1 transition-all">
-                  <span>Transfer</span>
+                  <span>{language === 'ZH' ? '資金轉賬' : 'Transfer'}</span>
                 </button>
                 <button className="bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold px-5 py-2.5 rounded-full border border-slate-200 flex items-center space-x-1 transition-all">
-                  <span>Earn</span>
+                  <span>{language === 'ZH' ? '簡單賺幣' : 'Earn'}</span>
                 </button>
               </div>
 
@@ -663,10 +696,14 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                 
                 {/* Dotted threshold guidelines as seen in screenshot */}
                 <div className="absolute left-0 right-0 top-[28%] border-t border-dashed border-slate-100 flex justify-between px-1 pointer-events-none">
-                  <span className="text-[10px] font-mono text-slate-300 translate-y-[-100%]">$244,351.75 (High)</span>
+                  <span className="text-[10px] font-mono text-slate-300 translate-y-[-100%]">
+                    $244,351.75 ({language === 'ZH' ? '最高值' : 'High'})
+                  </span>
                 </div>
                 <div className="absolute left-0 right-0 bottom-[18%] border-t border-dashed border-slate-100 flex justify-between px-1 pointer-events-none">
-                  <span className="text-[10px] font-mono text-slate-300">$230,456.19 (Low)</span>
+                  <span className="text-[10px] font-mono text-slate-300">
+                    $230,456.19 ({language === 'ZH' ? '最低值' : 'Low'})
+                  </span>
                 </div>
 
                 <div className="h-[150px] w-full relative">
@@ -767,7 +804,9 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
             {/* BOX 3: TODAY'S CRYPTO PRICES */}
             <div id="crypto-prices-watchlist-card" className="bg-white border border-gray-200 rounded-2xl p-5 md:p-6 shadow-sm">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center space-y-3 sm:space-y-0 mb-4 pb-3 border-b border-slate-100">
-                <h4 className="text-[16px] font-extrabold text-slate-900 font-sans">Today's crypto prices</h4>
+                <h4 className="text-[16px] font-extrabold text-slate-900 font-sans">
+                  {language === 'ZH' ? '今日熱門代幣價格' : "Today's crypto prices"}
+                </h4>
                 
                 {/* Horizontal Category Switcher */}
                 <div className="flex space-x-3 text-xs font-semibold text-slate-400 overflow-x-auto scrollbar-none pb-1 sm:pb-0">
@@ -781,7 +820,13 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                           : 'border-transparent hover:text-slate-800'
                       }`}
                     >
-                      {tabName}
+                      {language === 'ZH' ? (
+                        tabName === 'Favorites' ? '自選碼' :
+                        tabName === 'Top' ? '最熱門' :
+                        tabName === 'Hot' ? '飆升榜' :
+                        tabName === 'Gainers' ? '漲幅榜' :
+                        tabName === 'New' ? '新上市' : tabName
+                      ) : tabName}
                     </button>
                   ))}
                 </div>
@@ -792,11 +837,11 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                 <table className="w-full text-left border-collapse font-sans text-xs">
                   <thead>
                     <tr className="border-b border-slate-100 text-slate-400 font-semibold">
-                      <th className="py-2.5">Token</th>
-                      <th className="py-2.5">Price</th>
-                      <th className="py-2.5 text-right">24h Change</th>
-                      <th className="py-2.5 text-right hidden sm:table-cell">24h Volume</th>
-                      <th className="py-2.5 text-right">Actions</th>
+                      <th className="py-2.5">{language === 'ZH' ? '代幣' : 'Token'}</th>
+                      <th className="py-2.5">{language === 'ZH' ? '最新價' : 'Price'}</th>
+                      <th className="py-2.5 text-right">{language === 'ZH' ? '24h 漲跌' : '24h Change'}</th>
+                      <th className="py-2.5 text-right hidden sm:table-cell">{language === 'ZH' ? '24h 成交量' : '24h Volume'}</th>
+                      <th className="py-2.5 text-right">{language === 'ZH' ? '操作' : 'Actions'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -833,7 +878,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                         </td>
                         <td className="py-3 text-right">
                           <button className="bg-slate-900 hover:bg-black text-white font-bold text-[10px] px-3.5 py-1 rounded-full transition-colors">
-                            Trade
+                            {language === 'ZH' ? '交易' : 'Trade'}
                           </button>
                         </td>
                       </tr>
@@ -853,12 +898,14 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
             <div id="account-security-scorecard" className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="space-y-1.5 pr-2">
-                  <h4 className="text-[15px] font-extrabold text-slate-900 font-sans leading-tight">Secure your account</h4>
+                  <h4 className="text-[15px] font-extrabold text-slate-900 font-sans leading-tight">
+                    {language === 'ZH' ? '安全加固您的帳戶' : 'Secure your account'}
+                  </h4>
                   <p className="text-xs text-slate-500 font-normal leading-relaxed">
-                    Set up 2 more security measures to better protect your account.
+                    {language === 'ZH' ? '請再設置 2 項安全認證措施，以全面保障您的帳戶。' : 'Set up 2 more security measures to better protect your account.'}
                   </p>
                   <button className="text-xs font-bold text-black group hover:underline flex items-center space-x-0.5 pt-1.5">
-                    <span>Improve security</span>
+                    <span>{language === 'ZH' ? '加強安全等级' : 'Improve security'}</span>
                     <ChevronRight className="w-4 h-4 text-black group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </div>
@@ -912,22 +959,28 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
 
                   <div className="space-y-4">
                     <button className="text-[14px] font-extrabold text-[#9c6a1e] tracking-tight font-sans inline-flex items-center space-x-1 hover:underline group">
-                      <span>Unlock VIP benefits</span>
+                      <span>{language === 'ZH' ? '解鎖 VIP 專屬權益' : 'Unlock VIP benefits'}</span>
                       <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                     </button>
 
                     <div className="grid grid-cols-3 gap-3">
                       <div className="bg-stone-50/80 p-3 rounded-xl border border-stone-100 text-center space-y-1">
                         <Percent className="w-5 h-5 mx-auto text-[#df891c]" />
-                        <p className="text-[9px] font-bold text-slate-800 leading-tight">Discounted fees</p>
+                        <p className="text-[9px] font-bold text-slate-800 leading-tight">
+                          {language === 'ZH' ? '手續費折扣' : 'Discounted fees'}
+                        </p>
                       </div>
                       <div className="bg-stone-50/80 p-3 rounded-xl border border-stone-100 text-center space-y-1">
                         <TrendingUp className="w-5 h-5 mx-auto text-[#df891c]" />
-                        <p className="text-[9px] font-bold text-slate-800 leading-tight">Boosted yield</p>
+                        <p className="text-[9px] font-bold text-slate-800 leading-tight">
+                          {language === 'ZH' ? '最高加息收益' : 'Boosted yield'}
+                        </p>
                       </div>
                       <div className="bg-stone-50/80 p-3 rounded-xl border border-stone-100 text-center space-y-1">
                         <Star className="w-5 h-5 mx-auto text-[#df891c]" />
-                        <p className="text-[9px] font-bold text-slate-800 leading-tight">Priority support</p>
+                        <p className="text-[9px] font-bold text-slate-800 leading-tight">
+                          {language === 'ZH' ? '專屬客服支援' : 'Priority support'}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -948,15 +1001,17 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
               </div>
 
               <div className="space-y-1.5">
-                <h4 className="text-xs font-extrabold text-slate-900 font-sans uppercase tracking-wider">OKX Security Assistant</h4>
+                <h4 className="text-xs font-extrabold text-slate-900 font-sans uppercase tracking-wider">
+                  {language === 'ZH' ? 'OKX 安全防護助手' : 'OKX Security Assistant'}
+                </h4>
                 <p className="text-[11px] text-slate-500 font-sans leading-relaxed">
-                  Protect your account and wallet against malicious apps and digital threats.
+                  {language === 'ZH' ? '保護您的帳戶和錢包免受惡意程式和數位安全威脅。' : 'Protect your account and wallet against malicious apps and digital threats.'}
                 </p>
                 <button 
                   onClick={() => setShowChatAssistant(true)}
                   className="text-xs font-bold text-black border-b border-black pb-0.5 hover:opacity-80 transition-opacity inline-flex items-center space-x-0.5"
                 >
-                  <span>Try now</span>
+                  <span>{language === 'ZH' ? '立即體驗' : 'Try now'}</span>
                   <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
@@ -965,9 +1020,11 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
             {/* PANEL D: ANNOUNCEMENTS ACCORDION */}
             <div id="announcements-articles-list" className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm space-y-4">
               <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-                <h4 className="text-[15px] font-extrabold text-slate-900 font-sans">Announcements</h4>
+                <h4 className="text-[15px] font-extrabold text-slate-900 font-sans">
+                  {language === 'ZH' ? '平台最新公告' : 'Announcements'}
+                </h4>
                 <a href="#" className="text-xs font-bold text-slate-400 hover:text-black hover:underline flex items-center space-x-0.5">
-                  <span>More</span>
+                  <span>{language === 'ZH' ? '更多' : 'More'}</span>
                   <ChevronRight className="w-3 h-3" />
                 </a>
               </div>
@@ -976,28 +1033,28 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                 <div className="space-y-1 pt-0">
                   <span className="text-[9px] font-mono text-slate-400 font-semibold block">05/26/2026</span>
                   <a href="#" className="text-xs font-extrabold text-slate-800 hover:text-slate-950 block hover:underline leading-snug">
-                    OKX to delist MAJOR and J spot trading pairs
+                    {language === 'ZH' ? 'OKX 關於下線 MAJOR 及 J 現貨交易對的公告' : 'OKX to delist MAJOR and J spot trading pairs'}
                   </a>
                 </div>
 
                 <div className="space-y-1 pt-3.5">
                   <span className="text-[9px] font-mono text-slate-400 font-semibold block">05/26/2026</span>
                   <a href="#" className="text-xs font-semibold text-slate-700 hover:text-slate-950 block hover:underline leading-snug">
-                    OKX to list perpetual futures for AAOI, INFQ and CRWD equities
+                    {language === 'ZH' ? 'OKX 將上線 AAOI、INFQ 和 CRWD 股權永續合約' : 'OKX to list perpetual futures for AAOI, INFQ and CRWD equities'}
                   </a>
                 </div>
 
                 <div className="space-y-1 pt-3.5">
                   <span className="text-[9px] font-mono text-slate-400 font-semibold block">05/25/2026</span>
                   <a href="#" className="text-xs font-semibold text-slate-700 hover:text-slate-950 block hover:underline leading-snug">
-                    OKX to list AVAXUSD, BCHUSD, TONUSD and ZECUSD Expiry Perps (X-Perp)
+                    {language === 'ZH' ? 'OKX 將推出 AVAXUSD、BCHUSD、TONUSD 和 ZECUSD 定期合約 (X-Perp)' : 'OKX to list AVAXUSD, BCHUSD, TONUSD and ZECUSD Expiry Perps (X-Perp)'}
                   </a>
                 </div>
 
                 <div className="space-y-1 pt-3.5">
                   <span className="text-[9px] font-mono text-slate-400 font-semibold block">05/22/2026</span>
                   <a href="#" className="text-xs font-semibold text-slate-700 hover:text-slate-950 block hover:underline leading-snug">
-                    OKX x Gensyn (AI) Spot Trade-to-Earn: Trade and Share 500,000 USDT
+                    {language === 'ZH' ? 'OKX x Gensyn (AI) 現貨交易賽：大放異彩，瓜分 500,000 USDT 獎池' : 'OKX x Gensyn (AI) Spot Trade-to-Earn: Trade and Share 500,000 USDT'}
                   </a>
                 </div>
               </div>

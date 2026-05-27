@@ -18,6 +18,7 @@ import {
   Grid
 } from 'lucide-react';
 import { WithdrawalRecord } from './WithdrawalView';
+import { useLanguage } from '../locales';
 
 // Helper functions for matching the Screenshots' TRON consensus addresses & hex data structures
 const getPaddedAddressTopic = (addr: string) => {
@@ -48,6 +49,7 @@ interface TronExplorerViewProps {
 }
 
 export default function TronExplorerView({ record, onBack }: TronExplorerViewProps) {
+  const { language } = useLanguage();
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'Overview' | 'Token transfers' | 'Event logs'>('Overview');
 
@@ -111,16 +113,28 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
             </div>
 
             <div className="hidden lg:flex items-center space-x-6 text-[13px] font-bold text-zinc-400">
-              <span className="hover:text-white cursor-pointer transition-colors">Portfolio</span>
-              <span className="hover:text-white cursor-pointer transition-colors">Market</span>
-              <span className="hover:text-white cursor-pointer transition-colors">Meme Pump</span>
-              <span className="hover:text-white cursor-pointer transition-colors">Strategy</span>
-              <span className="hover:text-white cursor-pointer transition-colors">Swap</span>
+              <span className="hover:text-white cursor-pointer transition-colors">
+                {language === 'ZH' ? '資產管理' : 'Portfolio'}
+              </span>
+              <span className="hover:text-white cursor-pointer transition-colors">
+                {language === 'ZH' ? '級差市場' : 'Market'}
+              </span>
+              <span className="hover:text-white cursor-pointer transition-colors">
+                {language === 'ZH' ? 'Meme 爆發' : 'Meme Pump'}
+              </span>
+              <span className="hover:text-white cursor-pointer transition-colors">
+                {language === 'ZH' ? '策略交易' : 'Strategy'}
+              </span>
+              <span className="hover:text-white cursor-pointer transition-colors">
+                {language === 'ZH' ? '閃兌 Swap' : 'Swap'}
+              </span>
               <span className="text-white flex items-center space-x-1 cursor-pointer hover:opacity-95">
-                <span>Onchain OS</span>
+                <span>{language === 'ZH' ? '鏈上 OS' : 'Onchain OS'}</span>
                 <ChevronDown className="w-3 h-3 text-zinc-400" />
               </span>
-              <span className="hover:text-white cursor-pointer transition-colors">More</span>
+              <span className="hover:text-white cursor-pointer transition-colors">
+                {language === 'ZH' ? '更多' : 'More'}
+              </span>
             </div>
           </div>
 
@@ -132,7 +146,7 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
             </div>
             <button className="bg-[#96ff00] hover:opacity-95 text-black font-black text-xs px-4 py-2 rounded-full flex items-center space-x-1 cursor-pointer transition-all">
               <TrendingUp className="w-3 h-3" />
-              <span>Boost</span>
+              <span>{language === 'ZH' ? '加速' : 'Boost'}</span>
             </button>
             <button className="text-zinc-400 hover:text-white p-1">
               <Grid className="w-4 h-4" />
@@ -154,7 +168,7 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
               <div className="flex items-center space-x-1.5">
                 <span className="text-white font-extrabold text-base tracking-tight uppercase">TRON</span>
                 <span className="text-[11px] font-black tracking-widest text-[#96ff00] bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded">
-                  EXPLORER
+                  {language === 'ZH' ? '官方數據瀏覽器' : 'EXPLORER'}
                 </span>
               </div>
             </div>
@@ -165,26 +179,26 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
             <Search className="w-4 h-4 text-zinc-500 mr-2 shrink-0" />
             <input 
               type="text" 
-              placeholder="By address/transaction/block/token" 
+              placeholder={language === 'ZH' ? '輸入 地址 / 交易哈希 / 區塊編號 / 代幣名稱' : 'By address/transaction/block/token'} 
               className="bg-transparent border-none text-xs text-white placeholder-zinc-500 outline-none w-full font-semibold"
               defaultValue={txHash}
               readOnly
             />
             <div className="flex items-center space-x-1 relative">
               <button className="text-[10px] bg-zinc-800 hover:bg-zinc-700 font-bold text-zinc-400 px-2 py-0.5 rounded-md flex items-center space-x-1 border border-zinc-700">
-                <span>Blockchain</span>
+                <span>{language === 'ZH' ? '區塊鏈' : 'Blockchain'}</span>
                 <ChevronDown className="w-2.5 h-2.5" />
               </button>
               <button className="text-[10px] bg-zinc-800 hover:bg-zinc-700 font-bold text-zinc-400 px-2 py-0.5 rounded-md flex items-center space-x-1 border border-zinc-700">
-                <span>Tokens & NFTs</span>
+                <span>{language === 'ZH' ? '代幣 & NFT' : 'Tokens & NFTs'}</span>
                 <ChevronDown className="w-2.5 h-2.5" />
               </button>
               <button className="text-[10px] bg-zinc-800 hover:bg-zinc-700 font-bold text-zinc-400 px-2 py-0.5 rounded-md flex items-center space-x-1 border border-zinc-700">
-                <span>Developers</span>
+                <span>{language === 'ZH' ? '開發團隊' : 'Developers'}</span>
                 <ChevronDown className="w-2.5 h-2.5" />
               </button>
               <button className="text-[10px] bg-zinc-800 hover:bg-zinc-700 font-bold text-zinc-400 px-2 py-0.5 rounded-md border border-zinc-700">
-                <span>More</span>
+                <span>{language === 'ZH' ? '更多' : 'More'}</span>
               </button>
             </div>
           </div>
@@ -196,13 +210,15 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
         
         {/* Back and title bar */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-black text-white tracking-tight leading-none">Transaction details</h2>
+          <h2 className="text-lg font-black text-white tracking-tight leading-none">
+            {language === 'ZH' ? '全網交易詳細數據' : 'Transaction details'}
+          </h2>
           <button 
             onClick={onBack}
             className="text-xs bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 font-bold px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Close TRON Explorer</span>
+            <span>{language === 'ZH' ? '關閉波場瀏覽器' : 'Close TRON Explorer'}</span>
           </button>
         </div>
 
@@ -218,7 +234,11 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
                   : 'border-transparent hover:text-zinc-300'
               }`}
             >
-              {t}
+              {t === 'Overview' 
+                ? (language === 'ZH' ? '系統概述' : 'Overview') 
+                : t === 'Token transfers' 
+                ? (language === 'ZH' ? '代幣轉帳' : 'Token transfers') 
+                : (language === 'ZH' ? '合約日誌' : 'Event logs')}
             </button>
           ))}
         </div>        {/* Transaction detailed cards grid */}
@@ -226,7 +246,7 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
           
           {copiedText && (
             <div className="absolute top-4 right-4 bg-zinc-900 border border-zinc-805 text-[#96ff00] text-[10px] font-black tracking-wide py-1 px-3 rounded-full animate-in fade-in slide-in-from-top-1">
-              COPIED TO CLIPBOARD
+              {language === 'ZH' ? '複製成功！' : 'COPIED TO CLIPBOARD'}
             </div>
           )}
 
@@ -234,7 +254,7 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
             <div className="space-y-6">
               {/* Txn Hash Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Txn hash:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '交易哈希:' : 'Txn hash:'}</span>
                 <div className="flex items-center space-x-2 font-mono text-xs text-white max-w-full overflow-hidden">
                   <span className="truncate select-all">{txHash}</span>
                   <button 
@@ -249,52 +269,52 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
 
               {/* Txn Type Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Txn type:</span>
-                <span className="text-xs font-bold text-zinc-200">Contract trigger</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '交易類型:' : 'Txn type:'}</span>
+                <span className="text-xs font-bold text-zinc-200">{language === 'ZH' ? '呼叫智能合約Trigger' : 'Contract trigger'}</span>
               </div>
 
               {/* Result Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Result:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '執行結果:' : 'Result:'}</span>
                 <div className="flex items-center space-x-1.5">
                   <span className="bg-emerald-950/80 border border-emerald-900 text-emerald-400 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full flex items-center space-x-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    <span>Success</span>
+                    <span>{language === 'ZH' ? '交易完成 / Success' : 'Success'}</span>
                   </span>
                 </div>
               </div>
 
               {/* Status Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-[#a1a1aa] tracking-tight shrink-0">Status:</span>
+                <span className="w-48 text-xs font-bold text-[#a1a1aa] tracking-tight shrink-0">{language === 'ZH' ? '確認狀態:' : 'Status:'}</span>
                 <div className="flex items-center space-x-1.5 text-xs">
-                  <span className="text-emerald-400 font-black">Confirmed</span>
-                  <span className="text-zinc-500 font-semibold">At least 19 SRs have confirmed this transaction</span>
+                  <span className="text-emerald-400 font-black">{language === 'ZH' ? '已安全存儲在鏈' : 'Confirmed'}</span>
+                  <span className="text-zinc-500 font-semibold">{language === 'ZH' ? '全網已有至少 19 個超級代表節點確認該合約呼叫' : 'At least 19 SRs have confirmed this transaction'}</span>
                 </div>
               </div>
 
               {/* Block Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Block:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '區塊高度:' : 'Block:'}</span>
                 <div className="flex items-center space-x-2 text-xs">
                   <span className="text-blue-400 hover:underline font-mono font-bold cursor-pointer">82692435</span>
                   <span className="bg-emerald-950/40 border border-emerald-900/30 text-emerald-400 text-[9px] px-1.5 py-0.2 rounded font-black font-sans uppercase">
-                    370,976 blocks confirmed
+                    {language === 'ZH' ? '已確認 370,976 個區塊' : '370,976 blocks confirmed'}
                   </span>
                 </div>
               </div>
 
               {/* Date Time Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Date time:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '打包時間:' : 'Date time:'}</span>
                 <span className="text-xs text-white font-mono font-bold">
-                  {record.time} (Current block height consensus)
+                  {record.time} {language === 'ZH' ? '(當前波場區塊高度共識)' : '(Current block height consensus)'}
                 </span>
               </div>
 
               {/* From Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">From:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '發送賬戶:' : 'From:'}</span>
                 <div className="flex items-center space-x-2 text-xs">
                   <span className="text-blue-400 hover:underline font-mono font-bold cursor-pointer">
                     TLaGjwhvA8XQYSxFAcAxy7Dvuue9eGYitv
@@ -306,14 +326,14 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
                     <Copy className="w-3 h-3" />
                   </button>
                   <span className="text-[10px] text-zinc-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800 font-bold font-mono">
-                    # Exchange: OKX. Withdraw_159
+                    # {language === 'ZH' ? '機構熱錢包: OKX 撥款合約地址_159' : 'Exchange: OKX. Withdraw_159'}
                   </span>
                 </div>
               </div>
 
               {/* Contract Address Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Contract address:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '合約地址:' : 'Contract address:'}</span>
                 <div className="flex items-center space-x-2 text-xs">
                   <span className="text-blue-400 hover:underline font-mono font-bold cursor-pointer">
                     TR7NHqjeKQXGTCi8q8ZY4pL8otSzgjLj6t
@@ -325,28 +345,28 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
                     <Copy className="w-3 h-3" />
                   </button>
                   <span className="text-[10px] text-zinc-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800 font-bold font-mono">
-                    # Token: Tether USD
+                    # {language === 'ZH' ? '泰達代幣: Tether USD Contract' : 'Token: Tether USD'}
                   </span>
                 </div>
               </div>
 
               {/* TRC20 Token Transfers Section */}
               <div className="flex flex-col md:flex-row py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">TRC20 token transfers: <span className="bg-zinc-800 text-zinc-300 px-1.5 py-0.1 select-none text-[9px] font-bold rounded">1</span></span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? 'TRC20 轉帳事件:' : 'TRC20 token transfers:'} <span className="bg-zinc-800 text-zinc-300 px-1.5 py-0.1 select-none text-[9px] font-bold rounded">1</span></span>
                 <div className="text-xs space-y-2">
                   <div className="flex flex-wrap items-center gap-1.5 text-zinc-400 leading-relaxed font-semibold">
-                    <span>From</span>
-                    <span className="text-white hover:underline cursor-pointer font-mono font-bold">OKX. Withdraw_159</span>
-                    <span>To</span>
+                    <span>{language === 'ZH' ? '從' : 'From'}</span>
+                    <span className="text-white hover:underline cursor-pointer font-mono font-bold">{language === 'ZH' ? 'OKX 發放地址_159' : 'OKX. Withdraw_159'}</span>
+                    <span>{language === 'ZH' ? '發送至' : 'To'}</span>
                     {/* To withdrawal address */}
                     <span className="text-blue-400 hover:underline cursor-pointer font-mono font-bold">{record.address}</span>
                     <button 
                       onClick={() => copyText(record.address, 'withdrawal address')}
                       className="p-1 hover:bg-zinc-950 rounded text-zinc-500"
                     >
-                      <Copy className="w-3 h-3" />
+                      <Copy className="w-3.5 h-3.5" />
                     </button>
-                    <span>For</span>
+                    <span>{language === 'ZH' ? '額度為' : 'For'}</span>
                     {/* Amount details */}
                     <span className="text-yellow-400 font-mono font-extrabold text-[13px]">
                       {record.amount} (${record.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
@@ -363,7 +383,7 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
 
               {/* Transfer Amount Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Transfer amount:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '轉帳 TRX 數額:' : 'Transfer amount:'}</span>
                 <div className="text-xs font-mono font-extrabold text-zinc-300 flex items-center space-x-1.5">
                   <div className="w-3.5 h-3.5 rounded-full bg-red-600/20 border border-red-500/20 text-red-500 flex items-center justify-center text-[7px] font-black">▲</div>
                   <span>0 TRX</span>
@@ -373,31 +393,31 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
 
               {/* Bandwidth Consumption Row */}
               <div className="flex flex-col md:flex-row py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Bandwidth consumption:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '扣除網絡帶寬(Bandwidth):' : 'Bandwidth consumption:'}</span>
                 <div className="text-xs space-y-1">
-                  <p className="font-extrabold text-zinc-300">345 Bandwidth</p>
+                  <p className="font-extrabold text-zinc-300">{language === 'ZH' ? '345 單位帶寬' : '345 Bandwidth'}</p>
                   <div className="text-zinc-500 text-[11px] font-medium space-y-0.5">
-                    <p>↳ Free Bandwidth: 345 (from staking)</p>
-                    <p>↳ Extra Bandwidth: 0 (through burning of 0 TRX)</p>
+                    <p>{language === 'ZH' ? '↳ 免費帶寬: 345 (由質押豁免)' : '↳ Free Bandwidth: 345 (from staking)'}</p>
+                    <p>{language === 'ZH' ? '↳ 額外帶寬: 0 (透過銷毀 0 TRX)' : '↳ Extra Bandwidth: 0 (through burning of 0 TRX)'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Energy Consumption Row */}
               <div className="flex flex-col md:flex-row py-1 border-b border-zinc-900 pb-4 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Energy consumption:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '扣除合約能量(Energy):' : 'Energy consumption:'}</span>
                 <div className="text-xs space-y-1">
-                  <p className="font-extrabold text-[#96ff00]">64,285 Energy</p>
+                  <p className="font-extrabold text-[#96ff00]">{language === 'ZH' ? '64,285 單位能量' : '64,285 Energy'}</p>
                   <div className="text-zinc-500 text-[11px] font-medium space-y-0.5">
-                    <p>↳ Free Energy: 64,285 (from staking)</p>
-                    <p>↳ Extra Energy: 0 (through burning of 0 TRX)</p>
+                    <p>{language === 'ZH' ? '↳ 免費能量: 64,285 (由質押豁免)' : '↳ Free Energy: 64,285 (from staking)'}</p>
+                    <p>{language === 'ZH' ? '↳ 額外能量: 0 (透過銷毀 0 TRX)' : '↳ Extra Energy: 0 (through burning of 0 TRX)'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Energy Consumption Cap Row */}
               <div className="flex flex-col md:flex-row md:items-center py-1 gap-2">
-                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">Energy consumption cap:</span>
+                <span className="w-48 text-xs font-bold text-zinc-500 tracking-tight shrink-0">{language === 'ZH' ? '最大能量消耗限額:' : 'Energy consumption cap:'}</span>
                 <span className="text-xs text-zinc-300 font-extrabold">50 TRX</span>
               </div>
             </div>
@@ -412,7 +432,7 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
                 </button>
                 <span className="text-zinc-850 font-semibold select-none">|</span>
                 <button className="bg-transparent text-zinc-300 hover:text-white font-bold px-3 py-1.5 rounded-md border border-zinc-800 flex items-center space-x-1.5">
-                  <span>Token: All</span>
+                  <span>{language === 'ZH' ? '代幣類型: 全部' : 'Token: All'}</span>
                   <ChevronDown className="w-3 h-3 text-zinc-500" />
                 </button>
               </div>
@@ -422,10 +442,10 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
                 <table className="w-full text-left text-xs text-zinc-400 border-collapse">
                   <thead>
                     <tr className="border-b border-zinc-900/80 pb-3 font-bold text-zinc-500">
-                      <th className="pb-3 pt-1 font-bold">From</th>
-                      <th className="pb-3 pt-1 font-bold">To</th>
-                      <th className="pb-3 pt-1 font-bold">Amount</th>
-                      <th className="pb-3 pt-1 font-bold">Token</th>
+                      <th className="pb-3 pt-1 font-bold">{language === 'ZH' ? '發出方' : 'From'}</th>
+                      <th className="pb-3 pt-1 font-bold">{language === 'ZH' ? '接收方' : 'To'}</th>
+                      <th className="pb-3 pt-1 font-bold">{language === 'ZH' ? '轉帳金額' : 'Amount'}</th>
+                      <th className="pb-3 pt-1 font-bold">{language === 'ZH' ? '合約代幣' : 'Token'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-900/40">
@@ -433,7 +453,7 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
                       {/* From */}
                       <td className="py-4 pr-4">
                         <div className="flex items-center space-x-1.5 text-blue-400 hover:underline cursor-pointer font-bold font-mono">
-                          <span>OKX. Withdraw_159</span>
+                          <span>{language === 'ZH' ? 'OKX 出帳熱錢包_159' : 'OKX. Withdraw_159'}</span>
                           <button 
                             onClick={() => copyText('OKX. Withdraw_159', 'From pool')}
                             className="p-1 hover:bg-zinc-900 rounded text-zinc-500 hover:text-white transition-all"
@@ -488,10 +508,10 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
 
               {/* Right details layout */}
               <div className="flex-1 space-y-5">
-                
+
                 {/* Address */}
                 <div className="grid grid-cols-1 md:grid-cols-4 items-start gap-1 pb-4 border-b border-zinc-900/60">
-                  <span className="text-zinc-500 font-bold">Address:</span>
+                  <span className="text-zinc-500 font-bold">{language === 'ZH' ? '交易合約地址:' : 'Address:'}</span>
                   <div className="md:col-span-3 flex items-center space-x-2">
                     <div className="flex items-center space-x-1.5 text-blue-400 hover:underline cursor-pointer font-bold font-mono">
                       <span>TR7NHqjeKQXGTCi8q8ZY4pL8otSzgjLj6t</span>
@@ -507,13 +527,13 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
 
                 {/* Method calling */}
                 <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-1 pb-4 border-b border-zinc-900/60">
-                  <span className="text-zinc-500 font-bold">Method calling:</span>
-                  <span className="md:col-span-3 text-white font-mono font-extrabold text-xs">a9059cbb</span>
+                  <span className="text-zinc-500 font-bold">{language === 'ZH' ? '觸發方法:' : 'Method calling:'}</span>
+                  <span className="md:col-span-3 text-white font-mono font-extrabold text-xs">a9059cbb <span className="text-zinc-500 text-[10px] font-semibold font-sans normal-case ml-2">{language === 'ZH' ? '(轉帳方法特徵碼)' : '(Transfer signature descriptor)'}</span></span>
                 </div>
 
                 {/* Topics */}
                 <div className="grid grid-cols-1 md:grid-cols-4 items-start gap-1 pb-4 border-b border-zinc-900/60">
-                  <span className="text-zinc-500 font-bold">Topics:</span>
+                  <span className="text-zinc-500 font-bold">{language === 'ZH' ? '日誌主題(Topics):' : 'Topics:'}</span>
                   <div className="md:col-span-3 space-y-3 font-mono text-xs text-zinc-300">
                     <div className="text-white hover:underline cursor-pointer truncate font-bold select-all leading-normal">
                       ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
@@ -554,7 +574,7 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
 
                 {/* Data */}
                 <div className="grid grid-cols-1 md:grid-cols-4 items-start gap-1">
-                  <span className="text-zinc-500 font-bold col-span-1">Data:</span>
+                  <span className="text-zinc-500 font-bold col-span-1">{language === 'ZH' ? '事件數據(Data):' : 'Data:'}</span>
                   <div className="md:col-span-3 font-mono font-bold text-white text-xs tracking-wider leading-relaxed truncate break-all select-all">
                     {getPaddedAmountData(record.amount)}
                   </div>
@@ -571,11 +591,11 @@ export default function TronExplorerView({ record, onBack }: TronExplorerViewPro
       {/* 4. FOOTER */}
       <footer className="border-t border-zinc-900 mt-16 py-8 text-center text-xs text-zinc-500">
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p>© 2026 TRON Block Consensus Network, OKX Wallet Integration.</p>
+          <p>{language === 'ZH' ? '© 2026 波場鏈上共識數據網絡, OKX 錢包官方技術對接。' : '© 2026 TRON Block Consensus Network, OKX Wallet Integration.'}</p>
           <div className="flex space-x-4">
-            <span className="hover:underline cursor-pointer">Security Center</span>
-            <span className="hover:underline cursor-pointer">Protocol Consensus</span>
-            <span className="hover:underline cursor-pointer">Terms of Service</span>
+            <span className="hover:underline cursor-pointer">{language === 'ZH' ? '安全中心' : 'Security Center'}</span>
+            <span className="hover:underline cursor-pointer">{language === 'ZH' ? '網絡共識協議' : 'Protocol Consensus'}</span>
+            <span className="hover:underline cursor-pointer">{language === 'ZH' ? '服務使用條款' : 'Terms of Service'}</span>
           </div>
         </div>
       </footer>

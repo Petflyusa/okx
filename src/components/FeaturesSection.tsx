@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLanguage } from '../locales';
 import { 
   Wallet, 
   TrendingUp, 
@@ -22,6 +23,7 @@ import {
 } from 'lucide-react';
 
 export default function FeaturesSection() {
+  const { language, t } = useLanguage();
   // Web3 Wallet state
   const [walletConnected, setWalletConnected] = useState(false);
   const [activeChain, setActiveChain] = useState<'ethereum' | 'solana' | 'bitcoin'>('ethereum');
@@ -128,11 +130,18 @@ export default function FeaturesSection() {
         {/* Intro */}
         <div className="max-w-2xl text-left space-y-3 mb-16">
           <h2 className="font-display font-medium text-3xl sm:text-4xl tracking-tight leading-tight">
-            One platform, endless <br />
-            <span className="text-brand font-bold">financial possibilities</span>
+            {language === 'ZH' ? (
+              <>單一平台，解鎖無限<br />
+              <span className="text-brand font-bold">金融可能與未來</span></>
+            ) : (
+              <>One platform, endless <br />
+              <span className="text-brand font-bold">financial possibilities</span></>
+            )}
           </h2>
           <p className="text-gray-400 font-sans leading-relaxed text-sm sm:text-base">
-            Whether you want to trade with high-leverage derivatives, secure stable yield percentages, or explore multi-chain decentralized finance, OKX has a built-in powerhouse for you.
+            {language === 'ZH' 
+              ? '無論您希望開展高槓桿衍生品交易、獲取穩定的高額理財收益，或探索多鏈去中心化 Web3 世界，OKX 都將成為您的全能動力引擎。' 
+              : 'Whether you want to trade with high-leverage derivatives, secure stable yield percentages, or explore multi-chain decentralized finance, OKX has a built-in powerhouse for you.'}
           </p>
         </div>
 
@@ -146,15 +155,19 @@ export default function FeaturesSection() {
                 <div className="inline-flex p-3 rounded-xl bg-brand/10 text-brand border border-brand/20">
                   <Wallet className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-bold font-display text-white">Your Portal to Web3</h3>
+                <h3 className="text-xl font-bold font-display text-white">
+                  {language === 'ZH' ? '您的 Web3 入口之門' : 'Your Portal to Web3'}
+                </h3>
                 <p className="text-xs sm:text-sm text-gray-400 leading-relaxed font-sans">
-                  The most versatile non-custodial wallet with built-in support for 80+ networks. Manage multi-chain tokens, store NFTs, participate in DeFi swaps, and integrate dApps with military-grade safety.
+                  {language === 'ZH' 
+                    ? '功能最豐富的非非託管錢包，內建支持全球 80+ 主流區塊鏈網絡。輕鬆管理多鏈代幣，展示收藏 NFTs、參與 DeFi 快速兌換，融合軍警級別的多重防護安全架構。' 
+                    : 'The most versatile non-custodial wallet with built-in support for 80+ networks. Manage multi-chain tokens, store NFTs, participate in DeFi swaps, and integrate dApps with military-grade safety.'}
                 </p>
               </div>
 
               <div className="mt-6">
                 <a href="#" className="inline-flex items-center space-x-1.5 text-xs text-brand font-semibold hover:underline group">
-                  <span>Explore decentralized finance</span>
+                  <span>{language === 'ZH' ? '探索去中心化金融' : 'Explore decentralized finance'}</span>
                   <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                 </a>
               </div>
@@ -165,7 +178,7 @@ export default function FeaturesSection() {
               <div className="flex justify-between items-center border-b border-dark-border pb-2.5">
                 <span className="text-gray-400 font-bold flex items-center">
                   <span className="h-2 w-2 bg-brand rounded-full mr-2"></span>
-                  OKX WEB3 WALLET
+                  {language === 'ZH' ? 'OKX WEB3 智能錢包' : 'OKX WEB3 WALLET'}
                 </span>
                 
                 <div className="flex gap-1">
@@ -187,17 +200,19 @@ export default function FeaturesSection() {
               {/* Wallet Screen Content */}
               <div className="py-4 space-y-3 flex-1 flex flex-col justify-center">
                 <div className="flex justify-between items-center text-xs text-gray-400">
-                  <span>Wallet Address</span>
+                  <span>{language === 'ZH' ? '錢包地址' : 'Wallet Address'}</span>
                   <button 
                     onClick={handleCopyWalletAddress}
                     className="text-brand hover:underline font-bold"
                   >
-                    {walletCopied ? 'Copied' : chainBalances[activeChain].address}
+                    {walletCopied ? (language === 'ZH' ? '已複製' : 'Copied') : chainBalances[activeChain].address}
                   </button>
                 </div>
                 
                 <div className="bg-[#12161f] p-3 rounded-lg border border-white/5">
-                  <span className="text-[10px] text-gray-500 block">AVAILABLE BALANCE</span>
+                  <span className="text-[10px] text-gray-500 block">
+                    {language === 'ZH' ? '可用資產餘額' : 'AVAILABLE BALANCE'}
+                  </span>
                   <span className="text-white text-lg font-bold">{chainBalances[activeChain].balance}</span>
                   <span className="text-gray-400 text-[10px] block mt-0.5">≈ {chainBalances[activeChain].valuation} USD</span>
                 </div>
@@ -207,7 +222,7 @@ export default function FeaturesSection() {
               {walletConnected ? (
                 <div className="bg-brand/10 border border-brand/20 p-2 rounded text-brand font-bold text-center flex items-center justify-center space-x-1 pb-2.5">
                   <Check className="w-4 w-4" />
-                  <span>Interactive Wallet Loaded Successfully</span>
+                  <span>{language === 'ZH' ? '智能防護錢包已成功連接' : 'Interactive Wallet Loaded Successfully'}</span>
                 </div>
               ) : (
                 <button
@@ -215,7 +230,7 @@ export default function FeaturesSection() {
                   onClick={handleWalletConnectSim}
                   className="w-full bg-white hover:bg-gray-100 text-black py-2.5 rounded-lg text-center font-semibold font-sans transition-colors cursor-pointer"
                 >
-                  Connect Wallet Demo
+                  {language === 'ZH' ? '連接錢包測試' : 'Connect Wallet Demo'}
                 </button>
               )}
             </div>
@@ -228,9 +243,13 @@ export default function FeaturesSection() {
               <div className="inline-flex p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <PiggyBank className="w-5 h-5" />
               </div>
-              <h3 className="text-xl font-bold font-display text-white">Simple Earn APY Calculator</h3>
+              <h3 className="text-xl font-bold font-display text-white">
+                {language === 'ZH' ? '簡單賺幣 APY 計算器' : 'Simple Earn APY Calculator'}
+              </h3>
               <p className="text-xs text-gray-400 leading-relaxed font-sans">
-                Deploy stablecoins or assets to earn premium compounding reward ratios. Slide or input values to preview potential staking profits immediately.
+                {language === 'ZH' 
+                  ? '投入穩定幣或其他資產以賺取優質的複利益率。輸入數值即可即時預覽潛在的質押收益。' 
+                  : 'Deploy stablecoins or assets to earn premium compounding reward ratios. Slide or input values to preview potential staking profits immediately.'}
               </p>
               
               {/* Calculator Panel */}
@@ -238,7 +257,7 @@ export default function FeaturesSection() {
                 
                 {/* Asset Choice */}
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-400 font-sans">Calculate Asset:</span>
+                  <span className="text-gray-400 font-sans">{language === 'ZH' ? '計算幣種：' : 'Calculate Asset:'}</span>
                   <div className="flex bg-[#12161f] p-0.5 rounded border border-white/5">
                     {Object.keys(apyRates).map((symbol) => (
                       <button
@@ -255,8 +274,8 @@ export default function FeaturesSection() {
                 {/* Amount input */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-[11px] text-gray-500">
-                    <span>Deposit Amount</span>
-                    <span className="text-brand font-bold">{currentApy}% APY Rate</span>
+                    <span>{language === 'ZH' ? '投入金額' : 'Deposit Amount'}</span>
+                    <span className="text-brand font-bold">{currentApy}% {language === 'ZH' ? '年化收益率' : 'APY Rate'}</span>
                   </div>
                   <input
                     id="stake-amount-input"
@@ -270,15 +289,15 @@ export default function FeaturesSection() {
                 {/* Earnings */}
                 <div className="grid grid-cols-3 gap-2 border-t border-dark-border/40 pt-3">
                   <div>
-                    <span className="text-[9px] text-gray-500 block uppercase font-sans">Daily Earnings</span>
+                    <span className="text-[9px] text-gray-500 block uppercase font-sans">{language === 'ZH' ? '每日收益' : 'Daily Earnings'}</span>
                     <span className="text-emerald-400 font-bold text-sm mt-0.5">${dailyEarning.toFixed(3)}</span>
                   </div>
                   <div>
-                    <span className="text-[9px] text-gray-500 block uppercase font-sans">Monthly Yield</span>
+                    <span className="text-[9px] text-gray-500 block uppercase font-sans">{language === 'ZH' ? '每月估計' : 'Monthly Yield'}</span>
                     <span className="text-emerald-400 font-bold text-sm mt-0.5">${monthlyEarning.toFixed(2)}</span>
                   </div>
                   <div>
-                    <span className="text-[9px] text-gray-500 block uppercase font-sans">Yearly Yield</span>
+                    <span className="text-[9px] text-gray-500 block uppercase font-sans">{language === 'ZH' ? '年預估收益' : 'Yearly Yield'}</span>
                     <span className="text-brand font-extrabold text-sm mt-0.5">${yearlyEarning.toFixed(2)}</span>
                   </div>
                 </div>
@@ -288,7 +307,7 @@ export default function FeaturesSection() {
 
             <div className="mt-6">
               <a href="#" className="inline-flex items-center space-x-1.5 text-xs text-brand font-semibold hover:underline group">
-                <span>Start earning up to 14.8% APY</span>
+                <span>{language === 'ZH' ? '立即開啟高達 14.8% APY 賺幣收益' : 'Start earning up to 14.8% APY'}</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </a>
             </div>
@@ -301,16 +320,20 @@ export default function FeaturesSection() {
               <div className="inline-flex p-3 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20">
                 <Cpu className="w-5 h-5" />
               </div>
-              <h3 className="text-xl font-bold font-display text-white">Liquid Order Books</h3>
+              <h3 className="text-xl font-bold font-display text-white">
+                {language === 'ZH' ? '深度流動性訂單簿' : 'Liquid Order Books'}
+              </h3>
               <p className="text-xs text-gray-400 leading-relaxed font-sans">
-                Institutional-grade liquid depths, high speed API hooks, and maker options. OKX provides the tightest bid-ask spreads for derivatives and spot pairs across the ecosystem.
+                {language === 'ZH' 
+                  ? '機構級優質盤口深度、低延遲 API 連接以及豐富的掛單選項。OKX 為衍生品與現貨交易對提供全網最窄的價差水準。' 
+                  : 'Institutional-grade liquid depths, high speed API hooks, and maker options. OKX provides the tightest bid-ask spreads for derivatives and spot pairs across the ecosystem.'}
               </p>
 
               {/* Mini Streaming Orderbook widget */}
               <div className="bg-black/75 rounded-lg border border-dark-border p-3 font-mono text-[10px] h-48 flex flex-col justify-between text-left overflow-hidden">
                 <div className="flex justify-between text-slate-500 font-bold border-b border-dark-border pb-1.5 mb-1 text-[9px]">
-                  <span>PRICE (USD)</span>
-                  <span>SIZE (BTC)</span>
+                  <span>{language === 'ZH' ? '交易價格 (USD)' : 'PRICE (USD)'}</span>
+                  <span>{language === 'ZH' ? '委託數量 (BTC)' : 'SIZE (BTC)'}</span>
                 </div>
                 
                 {/* Asks (Sell) */}
@@ -329,7 +352,9 @@ export default function FeaturesSection() {
                   <span className="text-brand flex items-center">
                     <Activity className="w-3.5 h-3.5 mr-1" /> $96,450.00
                   </span>
-                  <span className="text-slate-500 font-normal">Spread: $6.00</span>
+                  <span className="text-slate-500 font-normal">
+                    {language === 'ZH' ? `買賣價差: $6.00` : 'Spread: $6.00'}
+                  </span>
                 </div>
 
                 {/* Bids (Buy) */}
@@ -347,7 +372,7 @@ export default function FeaturesSection() {
 
             <div className="mt-4">
               <a href="#" className="inline-flex items-center space-x-1.5 text-xs text-brand font-semibold hover:underline group">
-                <span>Access raw API endpoints</span>
+                <span>{language === 'ZH' ? '訪問原始 API 端點' : 'Access raw API endpoints'}</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </a>
             </div>
@@ -361,21 +386,29 @@ export default function FeaturesSection() {
                 <div className="inline-flex p-3 rounded-xl bg-violet-500/10 text-violet-400 border border-violet-500/20">
                   <UserCheck className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-bold font-display text-white">Copy Trading Arena</h3>
+                <h3 className="text-xl font-bold font-display text-white">
+                  {language === 'ZH' ? '跟單交易廣場' : 'Copy Trading Arena'}
+                </h3>
                 <p className="text-xs sm:text-sm text-gray-400 leading-relaxed font-sans">
-                  Mirror top traders automatically. Easily filter through expert risk parameters, win-ratios, and historic gains. Allocate custom deposit fractions to lead-traders in one-click.
+                  {language === 'ZH' 
+                    ? '自動鏡像跟隨頂尖交易員。按收益、勝率及歷史業績智能篩選。一鍵分配跟單資金比例、實時追蹤仓位波動。' 
+                    : 'Mirror top traders automatically. Easily filter through expert risk parameters, win-ratios, and historic gains. Allocate custom deposit fractions to lead-traders in one-click.'}
                 </p>
                 <div className="bg-[#090c10] border border-dark-border p-3.5 rounded-lg text-xs space-y-1 sm:space-y-1.5 font-sans leading-relaxed text-gray-400">
                   <div className="flex items-center text-white font-semibold">
-                    <Zap className="w-4 h-4 text-brand mr-1.5" /> Automate, Relax, and Track
+                    <Zap className="w-4 h-4 text-brand mr-1.5" /> {language === 'ZH' ? '自動、省心、精準即時同步' : 'Automate, Relax, and Track'}
                   </div>
-                  <p className="text-[11px]">When your copied trader opens/closes a position, OKX mirror execution copies them in real-time with ultra-low slippages.</p>
+                  <p className="text-[11px]">
+                    {language === 'ZH' 
+                      ? '當您所複製的經理人開仓或平仓時，OKX 高性能鏡像引擎將以極窄滑點在後台同步執行跟單委託。' 
+                      : 'When your copied trader opens/closes a position, OKX mirror execution copies them in real-time with ultra-low slippages.'}
+                  </p>
                 </div>
               </div>
 
               <div className="mt-4">
                 <a href="#" className="inline-flex items-center space-x-1.5 text-xs text-brand font-semibold hover:underline group">
-                  <span>Browse expert traders rankings</span>
+                  <span>{language === 'ZH' ? '瀏覽明星交易員排行' : 'Browse expert traders rankings'}</span>
                   <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                 </a>
               </div>
@@ -395,7 +428,7 @@ export default function FeaturesSection() {
                     <div>
                       <span className="font-bold text-white block">{trader.name}</span>
                       <span className="text-[10px] text-gray-500 font-mono">
-                        Copiers: {trader.copiers}/{trader.maxCopiers}
+                        {language === 'ZH' ? '跟單人數' : 'Copiers'}: {trader.copiers}/{trader.maxCopiers}
                       </span>
                     </div>
                   </div>
@@ -405,7 +438,7 @@ export default function FeaturesSection() {
                       +{trader.roi}% ROI
                     </span>
                     <span className="text-[10px] text-gray-400 font-mono font-normal">
-                      Win Rate: {trader.winRate}%
+                      {language === 'ZH' ? '勝率' : 'Win Rate'}: {trader.winRate}%
                     </span>
                   </div>
 
@@ -419,7 +452,7 @@ export default function FeaturesSection() {
                         : 'bg-brand text-black hover:bg-brand-hover'
                     }`}
                   >
-                    {trader.copied ? 'Copied ✓' : 'Copy'}
+                    {trader.copied ? (language === 'ZH' ? '已複製 ✓' : 'Copied ✓') : (language === 'ZH' ? '立即跟單' : 'Copy')}
                   </button>
                 </div>
               ))}

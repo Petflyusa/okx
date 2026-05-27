@@ -23,6 +23,7 @@ import {
   BookOpen,
   Cpu
 } from 'lucide-react';
+import { useLanguage } from '../locales';
 
 interface HeaderProps {
   activeTab: 'exchange' | 'wallet';
@@ -34,44 +35,56 @@ interface HeaderProps {
 export default function Header({ activeTab, setActiveTab, onSignUpClick, onLoginClick }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const { language: selectedLang, setLanguage: setSelectedLang, t } = useLanguage();
+
+  const languages = [
+    { code: 'EN', name: 'English' },
+    { code: 'ES', name: 'Español' },
+    { code: 'DE', name: 'Deutsch' },
+    { code: 'FR', name: 'Français' },
+    { code: 'ZH', name: '繁體中文' },
+    { code: 'JA', name: '日本語' },
+  ];
 
   const menuItems = {
     buy: {
-      title: 'Buy Crypto',
-      badge: 'PROMO',
+      title: t('buyTitle'),
+      badge: selectedLang === 'ZH' ? '推廣' : 'PROMO',
       links: [
-        { name: 'Express buy', desc: 'Buy BTC, ETH, USDT with card or mobile wall', icon: Coins },
-        { name: 'P2P trading', desc: 'Zero fee peer-to-peer crypto market', icon: ShieldCheck },
-        { name: 'Third-party payment', desc: 'Buy crypto via Banxa, MoonPay, Simplex', icon: Layers }
+        { name: selectedLang === 'ZH' ? '極速買幣' : 'Express buy', desc: t('buyProDesc'), icon: Coins },
+        { name: t('p2pTitle'), desc: t('p2pDesc'), icon: ShieldCheck },
+        { name: t('thirdPartyTitle'), desc: t('thirdPartyDesc'), icon: Layers }
       ]
     },
     discover: {
-      title: 'Discover',
+      title: t('discoverTitle'),
       links: [
-        { name: 'Markets', desc: 'Real-time crypto prices, volumes, and data', icon: TrendingUp },
-        { name: 'Copy Trading', desc: 'Copy top performing trades & earn profits', icon: Flame, highlight: true },
-        { name: 'Crypto Converter', desc: 'Instant swap between 100+ assets with zero fees', icon: Layers },
-        { name: 'Academy', desc: 'Free guides, articles, and video tutorials', icon: BookOpen }
+        { name: t('marketsTitle'), desc: t('marketsDesc'), icon: TrendingUp },
+        { name: t('copyTradingTitle'), desc: t('copyTradingDesc'), icon: Flame, highlight: true },
+        { name: t('converterTitle'), desc: t('converterDesc'), icon: Layers },
+        { name: t('academyTitle'), desc: t('academyDesc'), icon: BookOpen }
       ]
     },
     trade: {
-      title: 'Trade',
+      title: t('tradeTitle'),
       links: [
-        { name: 'Spot Trading', desc: 'Buy and sell 300+ crypto tokens instantly', icon: Coins },
-        { name: 'Margin Trading', desc: 'Amplify profits with leveraged margin accounts', icon: Layers },
-        { name: 'Futures & Options', desc: 'Sleek derivative products with up to 125x leverage', icon: Cpu },
-        { name: 'Trading Bots', desc: 'Grid, DCA, and arbitrage automated execution', icon: Cpu }
+        { name: t('spotTitle'), desc: t('spotDesc'), icon: Coins },
+        { name: t('marginTitle'), desc: t('marginDesc'), icon: Layers },
+        { name: t('futuresTitle'), desc: t('futuresDesc'), icon: Cpu },
+        { name: t('botsTitle'), desc: t('botsDesc'), icon: Cpu }
       ]
     },
     grow: {
-      title: 'Grow',
+      title: t('growTitle'),
       links: [
-        { name: 'Simple Earn', desc: 'Locked or flexible deposits with high yield APY', icon: Award },
-        { name: 'On-chain Earn', desc: 'Participate in secure staking & DeFi directly', icon: Wallet },
-        { name: 'Crypto Loans', desc: 'Borrow USDT using your crypto portfolio as collateral', icon: ShieldCheck }
+        { name: t('earnTitle'), desc: t('earnDesc'), icon: Award },
+        { name: t('onchainTitle'), desc: t('onchainDesc'), icon: Wallet },
+        { name: t('loansTitle'), desc: t('loansDesc'), icon: ShieldCheck }
       ]
     }
   };
+
 
   const toggleDropdown = (name: string) => {
     if (activeDropdown === name) {
@@ -116,7 +129,7 @@ export default function Header({ activeTab, setActiveTab, onSignUpClick, onLogin
               <rect x="94" y="22" width="10" height="10" rx="1.2" />
             </svg>
             <span className="font-sans text-lg md:text-xl font-bold tracking-tight text-white select-none">
-              Wallet
+              {selectedLang === 'ZH' ? '錢包' : 'Wallet'}
             </span>
           </a>
 
@@ -131,7 +144,7 @@ export default function Header({ activeTab, setActiveTab, onSignUpClick, onLogin
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              Exchange
+              {t('exchange')}
             </button>
             <button
               id="switch-wallet-btn"
@@ -142,8 +155,8 @@ export default function Header({ activeTab, setActiveTab, onSignUpClick, onLogin
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              <span>Web3 Wallet</span>
-              <span className="text-[9px] bg-brand text-black px-1 rounded-sm scale-90 font-mono">NEW</span>
+              <span>{t('web3Wallet')}</span>
+              <span className="text-[9px] bg-brand text-black px-1 rounded-sm scale-90 font-mono">{selectedLang === 'ZH' ? '全新' : 'NEW'}</span>
             </button>
           </div>
 
@@ -227,7 +240,7 @@ export default function Header({ activeTab, setActiveTab, onSignUpClick, onLogin
               Web3
             </a>
             <a href="#" className="px-3.5 py-4 text-[14px] font-medium text-gray-300 hover:text-white transition-colors">
-              Institutional
+              {t('institutional')}
             </a>
           </nav>
         </div>
@@ -235,14 +248,63 @@ export default function Header({ activeTab, setActiveTab, onSignUpClick, onLogin
         {/* Right Side: Tools, Log In, Sign Up, App Download */}
         <div className="flex items-center space-x-3.5">
           {/* Global Search and Language Button */}
-          <div className="hidden lg:flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-1 relative">
             <button id="search-toggle" className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-colors">
               <Search className="w-4.5 h-4.5" />
             </button>
-            <button id="lang-toggle" className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-colors flex items-center space-x-1">
+            <button 
+              id="lang-toggle" 
+              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+              className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-colors flex items-center space-x-1"
+            >
               <Globe className="w-4.5 h-4.5" />
-              <span className="text-xs font-semibold">EN</span>
+              <span className="text-xs font-semibold">{selectedLang}</span>
             </button>
+
+            {/* Language dropdown menu */}
+            <AnimatePresence>
+              {langDropdownOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40 cursor-default" 
+                    onClick={() => setLangDropdownOpen(false)} 
+                  />
+                  <motion.div 
+                    id="lang-dropdown"
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.12 }}
+                    className="absolute top-12 right-0 w-44 bg-[#0a0d10] border border-dark-border rounded-xl shadow-[0_12px_32px_rgba(0,0,0,0.6)] p-1.5 z-50 flex flex-col gap-0.5"
+                  >
+                    <div className="text-[10px] font-mono font-semibold tracking-wider text-gray-500 px-3 py-1.5 uppercase select-none">
+                      Select Language
+                    </div>
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setSelectedLang(lang.code);
+                          setLangDropdownOpen(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-between ${
+                          selectedLang === lang.code 
+                            ? 'bg-brand text-black font-bold' 
+                            : 'text-gray-300 hover:text-white hover:bg-white/5'
+                        }`}
+                      >
+                        <span>{lang.name}</span>
+                        <span className={`text-[10px] font-mono ${
+                          selectedLang === lang.code ? 'text-black/60 font-medium' : 'text-gray-500'
+                        }`}>
+                          {lang.code}
+                        </span>
+                      </button>
+                    ))}
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* App download dropdown icon */}
@@ -284,7 +346,7 @@ export default function Header({ activeTab, setActiveTab, onSignUpClick, onLogin
             onClick={onLoginClick}
             className="text-[14px] font-semibold text-white px-3.5 py-1.5 rounded-full hover:bg-white/5 transition-colors"
           >
-            Log in
+            {t('login')}
           </button>
 
           {/* Sign up Button - Neon Lime Green */}
@@ -293,7 +355,7 @@ export default function Header({ activeTab, setActiveTab, onSignUpClick, onLogin
             onClick={onSignUpClick}
             className="text-[14px] font-semibold bg-brand hover:bg-brand-hover text-black px-4 py-1.5 rounded-full transition-all hover:scale-[1.03] duration-200"
           >
-            Sign up
+            {t('signup')}
           </button>
 
           {/* Hamburger Mobile Menu Toggle */}

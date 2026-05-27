@@ -31,9 +31,11 @@ import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
 import { CryptoAsset } from './types';
 import DashboardView from './components/DashboardView';
+import { useLanguage } from './locales';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'exchange' | 'wallet'>('exchange');
+  const { language, setLanguage, t } = useLanguage();
   
   // Auth state
   const [userAccount, setUserAccount] = useState<string | null>(null);
@@ -70,7 +72,11 @@ export default function App() {
     setAuthModal(null);
     
     // Trigger success toast
-    setToastNotification(`Welcome back, ${authEmail}! Fully authenticated with advanced portfolio protections active.`);
+    setToastNotification(
+      language === 'ZH' 
+        ? `歡迎回來，${authEmail}！安全認證已完成，高級投資組合保護已啟動。`
+        : `Welcome back, ${authEmail}! Fully authenticated with advanced portfolio protections active.`
+    );
   };
 
   const handleFastRegistration = (email: string) => {
@@ -88,7 +94,11 @@ export default function App() {
     }
     
     // Update toast notice to inform they can use the fast-swap calculator for their chosen asset
-    setToastNotification(`Ready to swap ${asset.symbol}/USDT. Live rate loaded is $${asset.price.toLocaleString()} USD.`);
+    setToastNotification(
+      language === 'ZH'
+        ? `準備兌換 ${asset.symbol}/USDT。當前加載的行情匯率是 $${asset.price.toLocaleString()} USD。`
+        : `Ready to swap ${asset.symbol}/USDT. Live rate loaded is $${asset.price.toLocaleString()} USD.`
+    );
   };
 
   if (userAccount) {
@@ -98,7 +108,11 @@ export default function App() {
         onLogout={() => {
           setUserAccount(null);
           setVipLevel(null);
-          setToastNotification('Secured sign out executed. Your simulated browser session is clean.');
+          setToastNotification(
+            language === 'ZH'
+              ? '安全退出成功。您的瀏覽器模擬會話已安全清除。'
+              : 'Secured sign out executed. Your simulated browser session is clean.'
+          );
         }} 
       />
     );
@@ -118,16 +132,25 @@ export default function App() {
             className="bg-[#12161f] border-b border-dark-border text-xs py-3 px-4 text-center text-white relative flex items-center justify-center space-x-2"
           >
             <Bell className="w-4 h-4 text-brand animate-bounce" />
-            <span className="font-medium">{toastNotification}</span>
+            <span className="font-medium">
+              {toastNotification === 'SUI Super Staking active: Earn up to 14.8% APY inside Simple Earn pools now.' 
+                ? t('promoActive') 
+                : toastNotification
+              }
+            </span>
             <span className="text-gray-500 hidden md:inline">|</span>
             <button
               onClick={() => {
                 const url = "https://www.okx.com/";
-                setToastNotification(`Direct details found on ${url}`);
+                setToastNotification(
+                  language === 'ZH'
+                    ? `詳情請參閱 ${url}`
+                    : `Direct details found on ${url}`
+                );
               }}
-              className="text-brand font-bold hover:underline flex items-center space-x-0.5"
+              className="text-brand font-bold hover:underline flex items-center space-x-0.5 animate-pulse"
             >
-              <span>Learn More</span>
+              <span>{language === 'ZH' ? '了解更多' : 'Learn More'}</span>
               <ArrowRight className="w-3 h-3" />
             </button>
 
@@ -169,14 +192,19 @@ export default function App() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
                   </span>
-                  <span className="font-bold">OKX WEB3 WALLET ACCESS MODE:</span>
-                  <span className="text-white hidden lg:inline">Non-custodial cryptographic assets, NFTs markets, and custom DApp connections are active below.</span>
+                  <span className="font-bold">{language === 'ZH' ? 'OKX WEB3 錢包託管模式：' : 'OKX WEB3 WALLET ACCESS MODE:'}</span>
+                  <span className="text-white hidden lg:inline">
+                    {language === 'ZH'
+                      ? '非託管加密資產、NFT 市場與自定義去中心化應用程式（DApps）聯接均已就緒。'
+                      : 'Non-custodial cryptographic assets, NFTs markets, and custom DApp connections are active below.'
+                    }
+                  </span>
                 </div>
                 <button 
                   onClick={() => setActiveTab('exchange')}
                   className="bg-brand text-black font-extrabold px-3 py-1 rounded-full text-[10px]"
                 >
-                  Return to Exchange
+                  {language === 'ZH' ? '返回交易平台' : 'Return to Exchange'}
                 </button>
               </div>
             </motion.div>
@@ -241,15 +269,20 @@ export default function App() {
                       <div className="bg-white rounded-[1px] w-2 h-2"></div>
                       <div className="bg-white rounded-[1px] w-2 h-2"></div>
                     </div>
-                    <span className="font-display font-bold text-lg text-white">OKX Secure portal</span>
+                    <span className="font-display font-bold text-lg text-white">
+                      {language === 'ZH' ? 'OKX 安全登入門戶' : 'OKX Secure portal'}
+                    </span>
                   </div>
                   <h3 className="text-xl font-bold font-display text-white mt-3">
-                    {authModal === 'signup' ? 'Create Your Account' : 'Log in to OKX'}
+                    {authModal === 'signup' 
+                      ? (language === 'ZH' ? '安全創建您的賬號' : 'Create Your Account')
+                      : (language === 'ZH' ? '登入至 OKX 平台' : 'Log in to OKX')
+                    }
                   </h3>
                   <p className="text-xs text-gray-400">
                     {authModal === 'signup' 
-                      ? 'Register with phone or email to claim up to $50 in Mystery Boxes!' 
-                      : 'Enter credentials to load portfolio balances and ledger allocations.'
+                      ? (language === 'ZH' ? '輸入郵箱或手機，免費註冊即領取高達價值 $50 的盲盒！' : 'Register with phone or email to claim up to $50 in Mystery Boxes!') 
+                      : (language === 'ZH' ? '輸入安全憑證以加載您的模擬賬本餘額與資產清單。' : 'Enter credentials to load portfolio balances and ledger allocations.')
                     }
                   </p>
                 </div>
@@ -257,7 +290,9 @@ export default function App() {
                 {/* Form elements */}
                 <form onSubmit={handleAuthSubmit} className="space-y-4">
                   <div className="space-y-1.5 text-left">
-                    <label className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500">Email Address / Phone Number</label>
+                    <label className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500">
+                      {language === 'ZH' ? '電子郵件地址 / 手機號碼' : 'Email Address / Phone Number'}
+                    </label>
                     <div className="relative">
                       <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                       <input
@@ -273,7 +308,9 @@ export default function App() {
                   </div>
 
                   <div className="space-y-1.5 text-left">
-                    <label className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500">Secure Cryptographic Password</label>
+                    <label className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500">
+                      {language === 'ZH' ? '安全密碼（非對稱加密傳輸）' : 'Secure Cryptographic Password'}
+                    </label>
                     <div className="relative">
                       <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                       <input
@@ -288,7 +325,9 @@ export default function App() {
                     </div>
                     {authModal === 'login' && (
                       <div className="flex justify-end pt-1">
-                        <a href="#" className="text-[10px] text-brand hover:underline">Forgot password?</a>
+                        <a href="#" className="text-[10px] text-brand hover:underline">
+                          {language === 'ZH' ? '忘記密碼？' : 'Forgot password?'}
+                        </a>
                       </div>
                     )}
                   </div>
@@ -304,7 +343,15 @@ export default function App() {
                         onChange={(e) => setCheckedTerms(e.target.checked)}
                       />
                       <label htmlFor="terms-checkbox" className="text-[10px] text-gray-400 select-none">
-                        I certify that I accept OKX's legal <a href="#" className="text-brand hover:underline">Terms of Service</a>, risk disclaimers, privacy manuals, and certify that I am at least 18 years old.
+                        {language === 'ZH' ? (
+                          <span>
+                            我確認同意並接受 OKX 的法律 <a href="#" className="text-brand hover:underline">服務條款</a>、風險聲明及隱私手冊，且我確認我已滿 18 周歲。
+                          </span>
+                        ) : (
+                          <span>
+                            I certify that I accept OKX's legal <a href="#" className="text-brand hover:underline">Terms of Service</a>, risk disclaimers, privacy manuals, and certify that I am at least 18 years old.
+                          </span>
+                        )}
                       </label>
                     </div>
                   )}
@@ -315,7 +362,12 @@ export default function App() {
                     disabled={authModal === 'signup' && !checkedTerms}
                     className="w-full bg-brand hover:bg-brand-hover disabled:opacity-50 text-black font-semibold rounded-xl py-3.5 mt-2 transition-all duration-200 flex items-center justify-center space-x-1 font-sans text-xs cursor-pointer"
                   >
-                    <span>{authModal === 'signup' ? 'Create Account Secured' : 'Authenticate & Unlock Ledger'}</span>
+                    <span>
+                      {authModal === 'signup' 
+                        ? (language === 'ZH' ? '安全創建我的加密資產賬戶' : 'Create Account Secured') 
+                        : (language === 'ZH' ? '完成安全核驗並加載資產賬本' : 'Authenticate & Unlock Ledger')
+                      }
+                    </span>
                     <ArrowRight className="w-3.5 h-3.5 fill-black ml-0.5" />
                   </button>
                 </form>
@@ -323,9 +375,19 @@ export default function App() {
                 {/* Bottom switcher for LogIn / Registers */}
                 <div className="pt-4 border-t border-dark-border/40 text-center text-[11px] text-gray-500">
                   {authModal === 'signup' ? (
-                    <span>Already integrated? <button onClick={() => setAuthModal('login')} className="text-brand font-bold hover:underline">Log in now</button></span>
+                    <span>
+                      {language === 'ZH' ? '已經集成環境？' : 'Already integrated?'}{' '}
+                      <button onClick={() => setAuthModal('login')} className="text-brand font-bold hover:underline">
+                        {language === 'ZH' ? '立即登入系統' : 'Log in now'}
+                      </button>
+                    </span>
                   ) : (
-                    <span>New to OKX safety? <button onClick={() => setAuthModal('signup')} className="text-brand font-bold hover:underline">Register free wallet</button></span>
+                    <span>
+                      {language === 'ZH' ? '尚未開啟安全防護？' : 'New to OKX safety?'}{' '}
+                      <button onClick={() => setAuthModal('signup')} className="text-brand font-bold hover:underline">
+                        {language === 'ZH' ? '免費註冊安全錢包' : 'Register free wallet'}
+                      </button>
+                    </span>
                   )}
                 </div>
 
@@ -354,7 +416,7 @@ export default function App() {
                 <span className="bg-brand text-black font-mono font-bold text-[8px] px-1 rounded-sm scale-90">LIVE</span>
               </div>
               <span className="text-[10px] text-gray-400 block font-mono font-normal">
-                {vipLevel}
+                {vipLevel === 'VIP Tier 3 (Pro)' && language === 'ZH' ? 'VIP 護航特權 3 級 (高級賬本)' : vipLevel}
               </span>
             </div>
             
@@ -363,11 +425,15 @@ export default function App() {
               onClick={() => {
                 setUserAccount(null);
                 setVipLevel(null);
-                setToastNotification('Secured sign out executed. Your simulated browser session is clean.');
+                setToastNotification(
+                  language === 'ZH'
+                    ? '安全退出成功。您的瀏覽器模擬會話已安全清除。'
+                    : 'Secured sign out executed. Your simulated browser session is clean.'
+                );
               }}
-              className="p-1 text-gray-500 hover:text-white transition-colors text-[10px] font-mono border-l border-dark-border/60 pl-2.5 font-bold"
+              className="p-1 text-gray-500 hover:text-white transition-colors text-[10px] font-mono border-l border-dark-border/6pl-2.5 font-bold"
             >
-              LOGOUT
+              {language === 'ZH' ? '退出登入' : 'LOGOUT'}
             </button>
           </motion.div>
         )}
@@ -376,3 +442,4 @@ export default function App() {
     </div>
   );
 }
+
