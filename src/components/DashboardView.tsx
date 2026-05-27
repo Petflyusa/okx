@@ -496,6 +496,16 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
           records={withdrawalRecords}
           onAddRecord={(newRecord) => {
             setWithdrawalRecords(prev => [newRecord, ...prev]);
+            // Schedule transitioning this specific record's status from 'Processing' to 'Sent' after 45 seconds (30s to 1min)
+            setTimeout(() => {
+              setWithdrawalRecords(prev => 
+                prev.map(rec => 
+                  rec.referenceNo === newRecord.referenceNo && rec.status === 'Processing'
+                    ? { ...rec, status: 'Sent' }
+                    : rec
+                )
+              );
+            }, 45000);
           }}
           onWithdrawalExecuted={(amount, fee) => {
             setCurrentBalance(prev => Math.max(0, prev - amount));
