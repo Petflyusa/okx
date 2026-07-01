@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, FormEvent, MouseEvent } from 'react';
+import { useState, FormEvent, MouseEvent, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../locales';
 import { 
@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import WithdrawalView, { WithdrawalRecord } from './WithdrawalView';
 import TronExplorerView from './TronExplorerView';
+import MyAssetsView, { AssetHolding } from './MyAssetsView';
 
 interface DashboardProps {
   userAccount: string;
@@ -46,7 +47,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
   const { language, setLanguage, t } = useLanguage();
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [currentBalance, setCurrentBalance] = useState(230980.95);
-  const [activeView, setActiveView] = useState<'dashboard' | 'withdrawal' | 'explorer'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'withdrawal' | 'explorer' | 'assets'>('dashboard');
   const [selectedRecord, setSelectedRecord] = useState<WithdrawalRecord | null>(null);
   const [copiedUid, setCopiedUid] = useState(false);
   const [activeSubTab, setActiveSubTab] = useState('Overview');
@@ -55,6 +56,160 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
   const [chartWidth, setChartWidth] = useState(500);
   const [cryptoTab, setCryptoTab] = useState<'Favorites' | 'Top' | 'Hot' | 'Gainers' | 'New'>('Top');
   const [vipModalClosed, setVipModalClosed] = useState(false);
+
+  // Dynamic Holdings State for My Assets
+  const [holdings, setHoldings] = useState<{
+    BTC: AssetHolding;
+    ETH: AssetHolding;
+    SOL: AssetHolding;
+    USDT: AssetHolding;
+  } | null>(null);
+  const [isAssetsLoading, setIsAssetsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPricesAndBalances = async () => {
+      setIsAssetsLoading(true);
+      // 1. Get or generate holdings quantities (using localStorage to persist)
+      let btcQty = 1.1542;
+      let ethQty = 14.8524;
+      let solQty = 120.5;
+      let usdtQty = 85200.50;
+
+      const cached = localStorage.getItem('okx_simulated_holdings');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (typeof parsed.BTC === 'number' && typeof parsed.ETH === 'number' && typeof parsed.USDT === 'number') {
+            btcQty = parsed.BTC;
+            ethQty = parsed.ETH;
+            solQty = typeof parsed.SOL === 'number' ? parsed.SOL : (50.0 + Math.random() * 200.0);
+            usdtQty = parsed.USDT;
+          }
+        } catch (e) {
+          console.error('Error parsing cached holdings', e);
+        }
+      } else {
+        // Generate random quantities
+        btcQty = 0.5 + Math.random() * 1.5; // 0.5 to 2.0 BTC
+        ethQty = 5.0 + Math.random() * 15.0; // 5.0 to 20.0 ETH
+        solQty = 50.0 + Math.random() * 200.0; // 50 to 250 SOL
+        usdtQty = 30000.0 + Math.random() * 70000.0; // 30,000 to 100,000 USDT
+        localStorage.setItem('okx_simulated_holdings', JSON.stringify({
+          BTC: btcQty,
+          ETH: ethQty,
+          SOL: solQty,
+          USDT: usdtQty
+        }));
+      }
+
+      // 2. Fetch live prices from Binance API ticker
+      let btcPrice = 92430.50;
+      let btcChange = 1.84;
+      let ethPrice = 3412.10;
+      let ethChange = -0.45;
+      let solPrice = 168.45;
+      let solChange = 4.12;
+
+      try {
+        const [btcRes, ethRes, solRes] = await Promise.all([
+          fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT'),
+          fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT'),
+          fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT')
+        ]);
+
+        if (btcRes.ok) {
+          const data = await btcRes.json();
+          btcPrice = parseFloat(data.lastPrice);
+          btcChange = parseFloat(data.priceChangePercent);
+        }
+        if (ethRes.ok) {
+          const data = await ethRes.json();
+          ethPrice = parseFloat(data.lastPrice);
+          ethChange = parseFloat(data.priceChangePercent);
+        }
+        if (solRes.ok) {
+          const data = await solRes.json();
+          solPrice = parseFloat(data.lastPrice);
+          solChange = parseFloat(data.priceChangePercent);
+        }
+      } catch (e) {
+        console.warn('Failed to fetch actual crypto prices, using fallbacks', e);
+      }
+
+      const freshHoldings = {
+        BTC: {
+          symbol: 'BTC',
+          name: 'Bitcoin',
+          qty: btcQty,
+          price: btcPrice,
+          change: btcChange,
+          isUp: btcChange >= 0,
+          vol: '24.2B'
+        },
+        ETH: {
+          symbol: 'ETH',
+          name: 'Ethereum',
+          qty: ethQty,
+          price: ethPrice,
+          change: ethChange,
+          isUp: ethChange >= 0,
+          vol: '12.8B'
+        },
+        SOL: {
+          symbol: 'SOL',
+          name: 'Solana',
+          qty: solQty,
+          price: solPrice,
+          change: solChange,
+          isUp: solChange >= 0,
+          vol: '3.9B'
+        },
+        USDT: {
+          symbol: 'USDT',
+          name: 'Tether',
+          qty: usdtQty,
+          price: 1.00,
+          change: 0.00,
+          isUp: true,
+          vol: '65.4B'
+        }
+      };
+
+      setHoldings(freshHoldings);
+      setIsAssetsLoading(false);
+
+      // Match the total balance
+      const totalBalance = (btcQty * btcPrice) + (ethQty * ethPrice) + (solQty * solPrice) + usdtQty;
+      setCurrentBalance(totalBalance);
+    };
+
+    loadPricesAndBalances();
+  }, []);
+
+  const handleWithdrawalExecuted = (amount: number, fee: number) => {
+    if (holdings) {
+      const updatedUsdtQty = Math.max(0, holdings.USDT.qty - amount);
+      const updatedHoldings = {
+        ...holdings,
+        USDT: {
+          ...holdings.USDT,
+          qty: updatedUsdtQty
+        }
+      };
+      setHoldings(updatedHoldings);
+      localStorage.setItem('okx_simulated_holdings', JSON.stringify({
+        BTC: holdings.BTC.qty,
+        ETH: holdings.ETH.qty,
+        SOL: holdings.SOL.qty,
+        USDT: updatedUsdtQty
+      }));
+      // Recalculate balance
+      const newTotal = (holdings.BTC.qty * holdings.BTC.price) + (holdings.ETH.qty * holdings.ETH.price) + (holdings.SOL.qty * holdings.SOL.price) + updatedUsdtQty;
+      setCurrentBalance(newTotal);
+    } else {
+      setCurrentBalance(prev => Math.max(0, prev - amount));
+    }
+  };
 
   // Lifted withdrawal records state
   const [withdrawalRecords, setWithdrawalRecords] = useState<WithdrawalRecord[]>([
@@ -341,7 +496,13 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                 <div className="flex flex-col text-slate-950 font-sans">
                   
                   {/* My assets */}
-                  <a href="#" className="flex items-center space-x-4 px-6 py-3.5 hover:bg-slate-50 transition-colors">
+                  <button 
+                    onClick={() => {
+                      setActiveView('assets');
+                      setActiveSubTab('Overview');
+                    }}
+                    className="w-full text-left flex items-center space-x-4 px-6 py-3.5 hover:bg-slate-50 transition-colors cursor-pointer"
+                  >
                     <div className="text-black shrink-0">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                         <rect x="2" y="5" width="20" height="14" rx="2" />
@@ -349,7 +510,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                       </svg>
                     </div>
                     <span className="text-sm font-bold text-slate-900">My assets</span>
-                  </a>
+                  </button>
 
                   {/* Deposit */}
                   <a href="#" className="flex items-center space-x-4 px-6 py-3.5 hover:bg-slate-50 transition-colors">
@@ -487,7 +648,7 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
       {/* 2. SUBTABS LIST AT TOP CONTENT (Overview, Profile, etc) */}
       <div id="light-subnav-panel" className="bg-white border-b border-gray-200 px-4 md:px-6 overflow-x-auto scrollbar-none">
         <div className="max-w-7xl mx-auto flex space-x-6 text-xs text-slate-500 font-semibold h-11 items-end">
-          {(activeView === 'withdrawal' ? fundingSubTabs : subTabs).map(tab => (
+          {(activeView === 'withdrawal' || activeView === 'assets' ? fundingSubTabs : subTabs).map(tab => (
             <button
                key={tab}
                onClick={() => {
@@ -496,6 +657,12 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
                    if (tab !== 'Funding') {
                      setActiveView('dashboard');
                      setActiveSubTab('Overview');
+                   }
+                 } else if (activeView === 'assets') {
+                   if (tab === 'Funding') {
+                     setActiveView('withdrawal');
+                   } else if (tab !== 'Overview') {
+                     setActiveView('dashboard');
                    }
                  } else {
                    if (tab === 'Funding') {
@@ -538,12 +705,26 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
               );
             }, 45000);
           }}
-          onWithdrawalExecuted={(amount, fee) => {
-            setCurrentBalance(prev => Math.max(0, prev - amount));
-          }}
+          onWithdrawalExecuted={handleWithdrawalExecuted}
           onViewExplorer={(record) => {
             setSelectedRecord(record);
             setActiveView('explorer');
+          }}
+        />
+      ) : activeView === 'assets' ? (
+        <MyAssetsView
+          userAccount={userAccount}
+          onBack={() => {
+            setActiveView('dashboard');
+            setActiveSubTab('Overview');
+          }}
+          balanceVisible={balanceVisible}
+          setBalanceVisible={setBalanceVisible}
+          holdings={holdings}
+          isLoading={isAssetsLoading}
+          onWithdrawClick={() => {
+            setActiveView('withdrawal');
+            setActiveSubTab('Funding');
           }}
         />
       ) : (
@@ -792,7 +973,13 @@ export default function DashboardView({ userAccount, onLogout }: DashboardProps)
 
                 {/* Footer link center aligned */}
                 <div className="text-center pt-5">
-                  <button className="text-[12px] font-bold text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center space-x-1">
+                  <button 
+                    onClick={() => {
+                      setActiveView('assets');
+                      setActiveSubTab('Overview');
+                    }}
+                    className="text-[12px] font-bold text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center space-x-1 cursor-pointer"
+                  >
                     <span>View my assets</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
